@@ -28,7 +28,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content .= "define('DB_NAME', " . var_export($name, true) . ");\n";
         $content .= "define('DB_USER', " . var_export($user, true) . ");\n";
         $content .= "define('DB_PASS', " . var_export($pass, true) . ");\n";
-        $content .= "define('DB_CHARSET', 'utf8mb4');\n";
+        $content .= "define('DB_CHARSET', 'utf8mb4');\n\n";
+        $content .= "function getDB() {\n";
+        $content .= "    static \$pdo = null;\n";
+        $content .= "    if (\$pdo === null) {\n";
+        $content .= "        try {\n";
+        $content .= "            \$dsn = \"mysql:host=\" . DB_HOST . \";dbname=\" . DB_NAME . \";charset=\" . DB_CHARSET;\n";
+        $content .= "            \$pdo = new PDO(\$dsn, DB_USER, DB_PASS, [\n";
+        $content .= "                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,\n";
+        $content .= "                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,\n";
+        $content .= "            ]);\n";
+        $content .= "        } catch (PDOException \$e) {\n";
+        $content .= "            die(\"Database connection failed: \" . \$e->getMessage());\n";
+        $content .= "        }\n";
+        $content .= "    }\n";
+        $content .= "    return \$pdo;\n";
+        $content .= "}\n";
         
         if (@file_put_contents($configFile, $content)) {
             // Test connection
