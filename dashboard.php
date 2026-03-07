@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <tr>
             <td>${inv.invoice_number}</td>
             <td>${inv.client_company_name ? inv.client_company_name + ' (' + (inv.client_name || '') + ')' : (inv.client_name || '-')}</td>
-            <td>${invoiceStatusBadge(inv.status, inv.due_date)}</td>
+            <td><span class="badge badge-${inv.status === 'unpaid' && inv.due_date && inv.due_date < new Date().toISOString().slice(0,10) ? 'overdue' : inv.status}">${inv.status === 'unpaid' && inv.due_date && inv.due_date < new Date().toISOString().slice(0,10) ? 'Overdue' : (inv.status ? inv.status.charAt(0).toUpperCase() + inv.status.slice(1) : 'Draft')}</span></td>
             <td>${inv.due_date}</td>
             <td>
                 <a href="invoice-view.php?id=${inv.id}" class="btn btn-sm btn-secondary">View</a>

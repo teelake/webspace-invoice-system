@@ -41,7 +41,14 @@ async function loadInvoices() {
         <tr>
             <td>${inv.invoice_number}</td>
             <td>${inv.client_company_name ? inv.client_company_name + ' (' + (inv.client_name || '') + ')' : (inv.client_name || '-')}</td>
-            <td>${invoiceStatusBadge(inv.status, inv.due_date)}</td>
+            <td>
+                <select class="status-select" data-id="${inv.id}" onchange="updateStatus(${inv.id}, this.value)">
+                    <option value="draft" ${inv.status === 'draft' ? 'selected' : ''}>Draft</option>
+                    <option value="unpaid" ${inv.status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
+                    <option value="paid" ${inv.status === 'paid' ? 'selected' : ''}>Paid</option>
+                    <option value="cancelled" ${inv.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                </select>
+            </td>
             <td>${typeof formatMoney === 'function' ? formatMoney(inv.total) : 'NGN ' + Number(inv.total).toLocaleString()}</td>
             <td>${inv.due_date}</td>
             <td>
@@ -51,6 +58,25 @@ async function loadInvoices() {
         </tr>
     `).join('') : '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No invoices yet</div><div class="empty-state-text">Create your first invoice to get started</div><a href="invoice-edit.php" class="btn btn-primary" style="margin-top:1rem">+ New Invoice</a></div></td></tr>';
 }
+
+async function updateStatus(id, status) {
+    try {
+        const res = await fetch(base + '/invoices.php', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status })
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || 'Failed');
+        }
+        loadInvoices();
+    } catch (e) {
+        alert(e.message || 'Failed to update status');
+        loadInvoices();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', loadInvoices);
 </script>
 <?php require_once __DIR__ . '/includes/layout-end.php'; ?>

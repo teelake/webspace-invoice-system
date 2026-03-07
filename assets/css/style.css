@@ -617,6 +617,13 @@ input[type="checkbox"] {
     color: var(--text);
 }
 
+.status-select {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    min-width: 100px;
+    cursor: pointer;
+}
+
 .data-table tbody tr:last-child td {
     border-bottom: none;
 }

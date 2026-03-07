@@ -171,6 +171,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $id = (int)($input['id'] ?? $_GET['id'] ?? 0);
+    if (!$id) jsonResponse(['error' => 'ID required'], 400);
+
+    $status = trim($input['status'] ?? $_GET['status'] ?? '');
+    $status = in_array($status, $validStatuses) ? $status : 'draft';
+
+    $stmt = $pdo->prepare("UPDATE invoices SET status = ? WHERE id = ?");
+    $stmt->execute([$status, $id]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Invoice not found'], 404);
+
+    $stmt = $pdo->prepare("SELECT * FROM invoices WHERE id = ?");
+    $stmt->execute([$id]);
+    jsonResponse($stmt->fetch());
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $id = $_GET['id'] ?? null;
     if (!$id) jsonResponse(['error' => 'ID required'], 400);
