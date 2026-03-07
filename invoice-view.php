@@ -83,7 +83,8 @@ async function loadInvoice() {
         <div style="display:grid; grid-template-columns:${layout === 'two-column' ? '1fr 1fr' : '1fr'}; gap:2rem; margin-bottom:2rem;">
             <div>
                 <h3 style="font-size:0.85rem; color:#64748b; margin-bottom:0.5rem;">BILL TO</h3>
-                <p style="margin:0; font-weight:600;">${inv.client_name || '-'}</p>
+                ${inv.client_company_name ? `<p style="margin:0; font-weight:600;">${inv.client_company_name}</p>` : ''}
+                <p style="margin:0; font-weight:${inv.client_company_name ? '500' : '600'};">${inv.client_name || '-'}</p>
                 ${inv.client_address ? `<p style="margin:0.25rem 0; font-size:0.9rem;">${inv.client_address}</p>` : ''}
                 ${inv.client_email ? `<p style="margin:0; font-size:0.9rem;">${inv.client_email}</p>` : ''}
                 ${inv.client_phone ? `<p style="margin:0; font-size:0.9rem;">${inv.client_phone}</p>` : ''}

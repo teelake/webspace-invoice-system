@@ -12,6 +12,7 @@ require_once __DIR__ . '/includes/layout.php';
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Company</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Address</th>
@@ -19,7 +20,7 @@ require_once __DIR__ . '/includes/layout.php';
             </tr>
         </thead>
         <tbody id="clientsTable">
-            <tr><td colspan="5" class="text-muted">Loading...</td></tr>
+            <tr><td colspan="6" class="text-muted">Loading...</td></tr>
         </tbody>
     </table>
 </div>
@@ -33,8 +34,12 @@ require_once __DIR__ . '/includes/layout.php';
         <form id="clientForm" class="modal-body">
             <input type="hidden" id="clientId" name="id">
             <div class="form-group">
-                <label for="clientName">Name *</label>
+                <label for="clientName">Contact Name *</label>
                 <input type="text" id="clientName" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="clientCompany">Company / Business Name</label>
+                <input type="text" id="clientCompany" name="company_name" placeholder="e.g. Acme Ltd">
             </div>
             <div class="form-group">
                 <label for="clientEmail">Email</label>
@@ -70,6 +75,7 @@ async function loadClients() {
     tbody.innerHTML = clients.length ? clients.map(c => `
         <tr>
             <td>${c.name}</td>
+            <td>${c.company_name || '-'}</td>
             <td>${c.email || '-'}</td>
             <td>${c.phone || '-'}</td>
             <td>${(c.address || '').substring(0, 40)}${(c.address || '').length > 40 ? '...' : ''}</td>
@@ -78,7 +84,7 @@ async function loadClients() {
                 <button type="button" class="btn btn-sm btn-danger" onclick="deleteClient(${c.id}, '${(c.name || '').replace(/'/g, "\\'")}')">Delete</button>
             </td>
         </tr>
-    `).join('') : '<tr><td colspan="5" class="text-muted">No clients yet. Add one to get started.</td></tr>';
+    `).join('') : '<tr><td colspan="6" class="text-muted">No clients yet. Add one to get started.</td></tr>';
 }
 
 function openClientModal(editId = null) {
@@ -90,6 +96,7 @@ function openClientModal(editId = null) {
         const c = clients.find(x => x.id == editId);
         if (c) {
             document.getElementById('clientName').value = c.name;
+            document.getElementById('clientCompany').value = c.company_name || '';
             document.getElementById('clientEmail').value = c.email || '';
             document.getElementById('clientPhone').value = c.phone || '';
             document.getElementById('clientAddress').value = c.address || '';
@@ -107,6 +114,7 @@ document.getElementById('clientForm').addEventListener('submit', async (e) => {
     const id = document.getElementById('clientId').value;
     const data = {
         name: document.getElementById('clientName').value.trim(),
+        company_name: document.getElementById('clientCompany').value.trim(),
         email: document.getElementById('clientEmail').value.trim(),
         phone: document.getElementById('clientPhone').value.trim(),
         address: document.getElementById('clientAddress').value.trim(),

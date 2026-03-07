@@ -37,7 +37,7 @@ async function loadInvoices() {
     tbody.innerHTML = (list || []).length ? list.map(inv => `
         <tr>
             <td>${inv.invoice_number}</td>
-            <td>${inv.client_name || '-'}</td>
+            <td>${inv.client_company_name ? inv.client_company_name + ' (' + (inv.client_name || '') + ')' : (inv.client_name || '-')}</td>
             <td><span class="badge badge-${inv.status}">${inv.status}</span></td>
             <td>${typeof formatMoney === 'function' ? formatMoney(inv.total) : 'NGN ' + Number(inv.total).toLocaleString()}</td>
             <td>${inv.due_date}</td>

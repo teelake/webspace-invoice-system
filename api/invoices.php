@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'] ?? null;
     if ($id) {
         $stmt = $pdo->prepare("
-            SELECT i.*, c.name as client_name, c.email as client_email, c.phone as client_phone, c.address as client_address,
+            SELECT i.*, c.name as client_name, c.company_name as client_company_name, c.email as client_email, c.phone as client_phone, c.address as client_address,
                    pt.name as payment_terms_name, pt.days as payment_terms_days
             FROM invoices i
             LEFT JOIN clients c ON i.client_id = c.id
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     $stmt = $pdo->query("
         SELECT i.id, i.invoice_number, i.status, i.payment_type, i.issue_date, i.due_date, i.created_at,
-               c.name as client_name,
+               c.name as client_name, c.company_name as client_company_name,
                (SELECT COALESCE(SUM(amount), 0) FROM invoice_items WHERE invoice_id = i.id) as subtotal,
                (SELECT COALESCE(SUM(amount), 0) FROM invoice_payments WHERE invoice_id = i.id) as paid_amount
         FROM invoices i

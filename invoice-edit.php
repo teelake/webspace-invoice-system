@@ -116,7 +116,10 @@ async function loadData() {
         fetch(base + '/company.php').then(r => r.json())
     ]);
     const sel = document.getElementById('clientId');
-    sel.innerHTML = '<option value="">Select client...</option>' + clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    sel.innerHTML = '<option value="">Select client...</option>' + clients.map(c => {
+        const label = c.company_name ? `${c.company_name} (${c.name})` : c.name;
+        return `<option value="${c.id}">${label}</option>`;
+    }).join('');
     const pt = document.getElementById('paymentTermsId');
     pt.innerHTML = '<option value="">-- Select --</option>' + (paymentTerms || []).map(t => `<option value="${t.id}">${t.name}</option>`).join('');
     const tmpl = document.getElementById('templateId');
@@ -211,6 +214,7 @@ document.getElementById('paymentType').addEventListener('change', function() {
 document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('invoiceId').value;
+    const isEdit = id && id !== '0';
     const items = getItems();
     if (!items.length) { alert('Add at least one line item'); return; }
     const clientId = document.getElementById('clientId').value;
@@ -230,9 +234,9 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
     };
     if (data.payment_type === 'installment') data.payments = getPayments();
     try {
-        const url = id ? base + '/invoices.php' : base + '/invoices.php';
-        const method = id ? 'PUT' : 'POST';
-        if (id) data.id = id;
+        const url = base + '/invoices.php';
+        const method = isEdit ? 'PUT' : 'POST';
+        if (isEdit) data.id = id;
         const res = await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },

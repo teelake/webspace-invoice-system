@@ -43,6 +43,7 @@ CREATE TABLE payment_terms (
 CREATE TABLE clients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255),
     email VARCHAR(255),
     phone VARCHAR(50),
     address TEXT,

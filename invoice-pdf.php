@@ -14,7 +14,7 @@ if (!$id || !isLoggedIn()) {
 
 $pdo = getDB();
 $stmt = $pdo->prepare("
-    SELECT i.*, c.name as client_name, c.email as client_email, c.phone as client_phone, c.address as client_address,
+    SELECT i.*, c.name as client_name, c.company_name as client_company_name, c.email as client_email, c.phone as client_phone, c.address as client_address,
            pt.name as payment_terms_name
     FROM invoices i
     LEFT JOIN clients c ON i.client_id = c.id
@@ -86,7 +86,8 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
     </div>
     <div style="margin-bottom:2rem;">
         <p style="color:#64748b; font-size:0.85rem; margin-bottom:0.25rem;">BILL TO</p>
-        <p style="margin:0; font-weight:600;"><?= htmlspecialchars($inv['client_name'] ?? '-') ?></p>
+        <?php if (!empty($inv['client_company_name'])): ?><p style="margin:0; font-weight:600;"><?= htmlspecialchars($inv['client_company_name']) ?></p><?php endif; ?>
+        <p style="margin:0; font-weight:<?= !empty($inv['client_company_name']) ? '500' : '600' ?>;"><?= htmlspecialchars($inv['client_name'] ?? '-') ?></p>
         <?php if (!empty($inv['client_address'])): ?><p style="margin:0.25rem 0;"><?= nl2br(htmlspecialchars($inv['client_address'])) ?></p><?php endif; ?>
         <?php if (!empty($inv['client_email'])): ?><p style="margin:0;"><?= htmlspecialchars($inv['client_email']) ?></p><?php endif; ?>
     </div>

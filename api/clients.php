@@ -19,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
     $name = trim($input['name'] ?? '');
     if (empty($name)) jsonResponse(['error' => 'Name required'], 400);
-    $stmt = $pdo->prepare("INSERT INTO clients (name, email, phone, address, notes) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO clients (name, company_name, email, phone, address, notes) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $name,
+        trim($input['company_name'] ?? '') ?: null,
         $input['email'] ?? '',
         $input['phone'] ?? '',
         $input['address'] ?? '',
@@ -39,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     if (!$id) jsonResponse(['error' => 'ID required'], 400);
     $name = trim($input['name'] ?? '');
     if (empty($name)) jsonResponse(['error' => 'Name required'], 400);
-    $stmt = $pdo->prepare("UPDATE clients SET name=?, email=?, phone=?, address=?, notes=? WHERE id=?");
-    $stmt->execute([$name, $input['email'] ?? '', $input['phone'] ?? '', $input['address'] ?? '', $input['notes'] ?? '', $id]);
+    $stmt = $pdo->prepare("UPDATE clients SET name=?, company_name=?, email=?, phone=?, address=?, notes=? WHERE id=?");
+    $stmt->execute([$name, trim($input['company_name'] ?? '') ?: null, $input['email'] ?? '', $input['phone'] ?? '', $input['address'] ?? '', $input['notes'] ?? '', $id]);
     $stmt = $pdo->prepare("SELECT * FROM clients WHERE id = ?");
     $stmt->execute([$id]);
     jsonResponse($stmt->fetch());
