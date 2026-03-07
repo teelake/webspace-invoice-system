@@ -8,6 +8,20 @@ if (!file_exists($dbConfig)) {
 }
 require_once $dbConfig;
 
+if (!function_exists('getDB')) {
+    function getDB() {
+        static $pdo = null;
+        if ($pdo === null) {
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . (defined('DB_CHARSET') ? DB_CHARSET : 'utf8mb4');
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        }
+        return $pdo;
+    }
+}
+
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
