@@ -78,7 +78,7 @@ async function loadInvoice() {
             <div style="text-align:right;">
                 <h1 style="margin:0; font-size:1.75rem; color:${accent}">INVOICE</h1>
                 <p style="margin:0.5rem 0; font-weight:600;">#${inv.invoice_number}</p>
-                <p style="margin:0; color:#64748b; font-size:0.9rem;">Status: <span class="badge badge-${inv.status}">${inv.status}</span></p>
+                <p style="margin:0; color:#64748b; font-size:0.9rem;">Status: ${invoiceStatusBadge(inv.status, inv.due_date)}</p>
             </div>
         </div>
         <div style="display:grid; grid-template-columns:${layout === 'two-column' ? '1fr 1fr' : '1fr'}; gap:2rem; margin-bottom:2rem;">

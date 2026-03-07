@@ -665,7 +665,7 @@ input[type="checkbox"] {
     color: #475569;
 }
 
-.badge-sent {
+.badge-unpaid {
     background: var(--primary-muted);
     color: var(--primary);
 }
