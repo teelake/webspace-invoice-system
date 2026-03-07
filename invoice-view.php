@@ -65,6 +65,11 @@ async function loadInvoice() {
     const layout = template.layout || 'two-column';
     const accent = template.accentColor || '#2563eb';
 
+    const today = new Date().toISOString().slice(0, 10);
+    const isOverdue = inv.status === 'unpaid' && inv.due_date && inv.due_date < today;
+    const statusLabel = isOverdue ? 'Overdue' : (inv.status ? inv.status.charAt(0).toUpperCase() + inv.status.slice(1) : 'Draft');
+    const statusClass = isOverdue ? 'overdue' : (inv.status || 'draft');
+
     let html = `
     <div class="invoice-paper" style="max-width:800px; margin:0 auto; font-family:${template.fontFamily || 'system-ui'}; padding:2rem; background:#fff; border-radius:8px; border:1px solid #e2e8f0;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
@@ -78,7 +83,7 @@ async function loadInvoice() {
             <div style="text-align:right;">
                 <h1 style="margin:0; font-size:1.75rem; color:${accent}">INVOICE</h1>
                 <p style="margin:0.5rem 0; font-weight:600;">#${inv.invoice_number}</p>
-                <p style="margin:0; color:#64748b; font-size:0.9rem;">Status: ${invoiceStatusBadge(inv.status, inv.due_date)}</p>
+                <p style="margin:0; color:#64748b; font-size:0.9rem;">Status: <span class="badge badge-${statusClass}">${statusLabel}</span></p>
             </div>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
