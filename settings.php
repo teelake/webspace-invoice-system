@@ -4,8 +4,9 @@ $pageTitle = 'Settings';
 require_once __DIR__ . '/includes/layout.php';
 ?>
 <div class="settings-form">
-    <h2 style="margin-bottom:1rem">Company Info</h2>
-    <form id="companyForm">
+    <div class="card">
+        <h2 style="margin-bottom:1rem">Company Info</h2>
+        <form id="companyForm">
         <div class="form-row">
             <div class="form-group">
                 <label>Company Name</label>
@@ -58,9 +59,9 @@ require_once __DIR__ . '/includes/layout.php';
         </div>
         <button type="submit" class="btn btn-primary">Save Company Settings</button>
     </form>
+    </div>
 
-    <hr style="margin:2rem 0; border:none; border-top:1px solid var(--border);">
-
+    <div class="card">
     <h2 style="margin-bottom:1rem">Payment Terms</h2>
     <div class="section-header">
         <span></span>
@@ -81,6 +82,7 @@ require_once __DIR__ . '/includes/layout.php';
                 <tr><td colspan="5" class="text-muted">Loading...</td></tr>
             </tbody>
         </table>
+    </div>
     </div>
 </div>
 
@@ -143,7 +145,7 @@ async function loadTerms() {
             <td>${t.description || '-'}</td>
             <td>${t.is_default ? 'Yes' : ''}</td>
             <td>
-                <button type="button" class="btn btn-sm" onclick="editTerm(${t.id})">Edit</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="editTerm(${t.id})">Edit</button>
                 <button type="button" class="btn btn-sm btn-danger" onclick="deleteTerm(${t.id})">Delete</button>
             </td>
         </tr>

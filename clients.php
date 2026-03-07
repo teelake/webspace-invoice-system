@@ -80,7 +80,7 @@ async function loadClients() {
             <td>${c.phone || '-'}</td>
             <td>${(c.address || '').substring(0, 40)}${(c.address || '').length > 40 ? '...' : ''}</td>
             <td>
-                <button type="button" class="btn btn-sm" onclick="editClient(${c.id})">Edit</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="editClient(${c.id})">Edit</button>
                 <button type="button" class="btn btn-sm btn-danger" onclick="deleteClient(${c.id}, '${(c.name || '').replace(/'/g, "\\'")}')">Delete</button>
             </td>
         </tr>

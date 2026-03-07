@@ -24,7 +24,7 @@ require_once __DIR__ . '/includes/layout.php';
 <div class="dashboard-section">
     <div class="section-header">
         <h2>Recent Invoices</h2>
-        <a href="invoices.php?new=1" class="btn btn-primary">New Invoice</a>
+        <a href="invoice-edit.php" class="btn btn-primary">New Invoice</a>
     </div>
     <div class="table-wrap">
         <table class="data-table">
@@ -59,11 +59,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     tbody.innerHTML = recent.length ? recent.map(inv => `
         <tr>
             <td>${inv.invoice_number}</td>
-            <td>${inv.client_name || '-'}</td>
+            <td>${inv.client_company_name ? inv.client_company_name + ' (' + (inv.client_name || '') + ')' : (inv.client_name || '-')}</td>
             <td><span class="badge badge-${inv.status}">${inv.status}</span></td>
             <td>${inv.due_date}</td>
             <td>
-                <a href="invoice-view.php?id=${inv.id}" class="btn btn-sm">View</a>
+                <a href="invoice-view.php?id=${inv.id}" class="btn btn-sm btn-secondary">View</a>
                 <a href="invoice-edit.php?id=${inv.id}" class="btn btn-sm">Edit</a>
             </td>
         </tr>

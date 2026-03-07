@@ -42,7 +42,7 @@ async function loadInvoices() {
             <td>${typeof formatMoney === 'function' ? formatMoney(inv.total) : 'NGN ' + Number(inv.total).toLocaleString()}</td>
             <td>${inv.due_date}</td>
             <td>
-                <a href="invoice-view.php?id=${inv.id}" class="btn btn-sm">View</a>
+                <a href="invoice-view.php?id=${inv.id}" class="btn btn-sm btn-secondary">View</a>
                 <a href="invoice-edit.php?id=${inv.id}" class="btn btn-sm">Edit</a>
             </td>
         </tr>

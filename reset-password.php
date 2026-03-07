@@ -34,7 +34,10 @@ if (empty($token)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - <?= APP_NAME ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/style.css">
 </head>
 <body class="auth-page">
     <div class="auth-card">
@@ -43,10 +46,10 @@ if (empty($token)) {
             <p>Enter your new password</p>
         </div>
         <?php if ($success): ?>
-        <div class="alert alert-success">Password reset successfully. <a href="index.php">Login now</a></div>
+        <div class="alert alert-success">Password reset successfully. <a href="<?= APP_URL ?>/index.php">Login now</a></div>
         <?php elseif ($error && $_SERVER['REQUEST_METHOD'] !== 'POST'): ?>
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-        <a href="forgot-password.php" class="auth-link">Request new link</a>
+        <a href="<?= APP_URL ?>/forgot-password.php" class="auth-link">Request new link</a>
         <?php else: ?>
         <?php if ($error): ?>
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
