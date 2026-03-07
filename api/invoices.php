@@ -54,6 +54,8 @@ $validStatuses = ['draft', 'unpaid', 'paid', 'cancelled'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $status = trim($input['status'] ?? $_GET['status'] ?? '');
+    $status = in_array($status, $validStatuses) ? $status : 'draft';
     $clientId = (int)($input['client_id'] ?? 0);
     if (!$clientId) jsonResponse(['error' => 'Client required'], 400);
     $items = $input['items'] ?? [];
@@ -76,8 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO invoices (invoice_number, client_id, status, payment_type, payment_terms_id, issue_date, due_date, notes, terms_conditions, template_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $status = trim($input['status'] ?? '');
-        $status = in_array($status, $validStatuses) ? $status : 'draft';
         $stmt->execute([
             $invoiceNumber,
             $clientId,
@@ -127,6 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $id = (int)($input['id'] ?? $_GET['id'] ?? 0);
     if (!$id) jsonResponse(['error' => 'ID required'], 400);
 
+    $termsId = !empty($input['payment_terms_id']) ? (int)$input['payment_terms_id'] : null;
+    $status = trim($input['status'] ?? $_GET['status'] ?? '');
+    $status = in_array($status, $validStatuses) ? $status : 'draft';
+
     $pdo->beginTransaction();
     try {
         $stmt = $pdo->prepare("
@@ -135,9 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                 notes=?, terms_conditions=?, template_id=?
             WHERE id=?
         ");
-        $termsId = !empty($input['payment_terms_id']) ? (int)$input['payment_terms_id'] : null;
-        $status = trim($input['status'] ?? '');
-        $status = in_array($status, $validStatuses) ? $status : 'draft';
         $stmt->execute([
             (int)$input['client_id'],
             $status,

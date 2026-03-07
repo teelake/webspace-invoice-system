@@ -218,10 +218,11 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
     if (!items.length) { alert('Add at least one line item'); return; }
     const clientId = document.getElementById('clientId').value;
     if (!clientId) { alert('Select a client'); return; }
+    const statusValue = document.getElementById('status').value || 'draft';
     const data = {
         client_id: clientId,
         invoice_number: document.getElementById('invoiceNumber').value || undefined,
-        status: document.getElementById('status').value,
+        status: statusValue,
         payment_type: document.getElementById('paymentType').value,
         payment_terms_id: document.getElementById('paymentTermsId').value || null,
         issue_date: document.getElementById('issueDate').value,
@@ -236,7 +237,8 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
         const url = base + '/invoices.php';
         const method = isEdit ? 'PUT' : 'POST';
         if (isEdit) data.id = id;
-        const res = await fetch(url, {
+        const urlWithStatus = url + (url.includes('?') ? '&' : '?') + 'status=' + encodeURIComponent(statusValue);
+        const res = await fetch(urlWithStatus, {
             method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
