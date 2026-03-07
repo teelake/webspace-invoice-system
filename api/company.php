@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
-    $fields = ['company_name', 'logo_url', 'address', 'phone', 'email', 'website', 'currency', 'tax_label', 'tax_rate', 'invoice_prefix', 'invoice_next_number'];
+    $fields = ['company_name', 'logo_url', 'address', 'phone', 'email', 'website', 'currency', 'bank_name', 'bank_account_name', 'bank_account_number', 'tax_label', 'tax_rate', 'invoice_prefix', 'invoice_next_number'];
     $updates = [];
     $params = [];
     foreach ($fields as $f) {

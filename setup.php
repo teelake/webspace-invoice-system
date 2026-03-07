@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="auth-page">
     <div class="auth-card" style="max-width: 480px;">
         <div class="auth-header">
-            <img src="<?= APP_URL ?>/assets/images/logo.png" alt="Webspace" style="height:48px; margin-bottom:0.75rem;">
+            <img src="<?= APP_URL ?>/assets/images/logo.png" alt="Webspace" style="height:64px; margin-bottom:0.75rem;">
             <h1>Database Setup</h1>
             <p>Enter your MySQL credentials to complete installation</p>
         </div>

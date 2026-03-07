@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="auth-page">
     <div class="auth-card">
         <div class="auth-header">
-            <img src="<?= APP_URL ?>/assets/images/logo.png" alt="Webspace" style="height:48px; margin-bottom:0.75rem;">
+            <img src="<?= APP_URL ?>/assets/images/logo.png" alt="Webspace" style="height:64px; margin-bottom:0.75rem;">
             <h1><?= APP_NAME ?></h1>
             <p>Sign in to your account</p>
         </div>

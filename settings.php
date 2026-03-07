@@ -36,6 +36,24 @@ require_once __DIR__ . '/includes/layout.php';
                 <input type="url" id="website" name="website" placeholder="https://...">
             </div>
         </div>
+        <div class="form-group">
+            <label style="font-weight:600; margin-bottom:0.5rem; display:block;">Bank Account (for invoice)</label>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">Payment details shown on invoices</p>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" id="bankName" name="bank_name" placeholder="e.g. GTBank">
+            </div>
+            <div class="form-group">
+                <label>Account Name</label>
+                <input type="text" id="bankAccountName" name="bank_account_name" placeholder="e.g. Acme Ltd">
+            </div>
+            <div class="form-group">
+                <label>Account Number</label>
+                <input type="text" id="bankAccountNumber" name="bank_account_number" placeholder="e.g. 0123456789">
+            </div>
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <label>Currency</label>
@@ -129,6 +147,9 @@ async function loadCompany() {
     document.getElementById('phone').value = c.phone || '';
     document.getElementById('email').value = c.email || '';
     document.getElementById('website').value = c.website || '';
+    document.getElementById('bankName').value = c.bank_name || '';
+    document.getElementById('bankAccountName').value = c.bank_account_name || '';
+    document.getElementById('bankAccountNumber').value = c.bank_account_number || '';
     document.getElementById('currency').value = c.currency || 'NGN';
     document.getElementById('taxLabel').value = c.tax_label || 'VAT';
     document.getElementById('taxRate').value = c.tax_rate ?? 7.5;
@@ -162,6 +183,9 @@ document.getElementById('companyForm').addEventListener('submit', async (e) => {
         phone: document.getElementById('phone').value,
         email: document.getElementById('email').value,
         website: document.getElementById('website').value,
+        bank_name: document.getElementById('bankName').value,
+        bank_account_name: document.getElementById('bankAccountName').value,
+        bank_account_number: document.getElementById('bankAccountNumber').value,
         currency: document.getElementById('currency').value,
         tax_label: document.getElementById('taxLabel').value,
         tax_rate: parseFloat(document.getElementById('taxRate').value) || 0,

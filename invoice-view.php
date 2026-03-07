@@ -69,7 +69,7 @@ async function loadInvoice() {
     <div class="invoice-paper" style="max-width:800px; margin:0 auto; font-family:${template.fontFamily || 'system-ui'}; padding:2rem; background:#fff; border-radius:8px; border:1px solid #e2e8f0;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
             <div>
-                ${company.logo_url ? `<img src="${company.logo_url}" alt="Logo" style="max-height:50px; margin-bottom:0.5rem;">` : ''}
+                ${company.logo_url ? `<img src="${company.logo_url}" alt="Logo" style="max-height:80px; margin-bottom:0.5rem;">` : ''}
                 <h2 style="margin:0; font-size:1.5rem; color:${accent}">${company.company_name || 'Company'}</h2>
                 ${company.address ? `<p style="margin:0.25rem 0; color:#64748b; font-size:0.9rem;">${company.address}</p>` : ''}
                 ${company.phone ? `<p style="margin:0; color:#64748b; font-size:0.9rem;">${company.phone}</p>` : ''}
@@ -81,8 +81,8 @@ async function loadInvoice() {
                 <p style="margin:0; color:#64748b; font-size:0.9rem;">Status: ${invoiceStatusBadge(inv.status, inv.due_date)}</p>
             </div>
         </div>
-        <div style="display:grid; grid-template-columns:${layout === 'two-column' ? '1fr 1fr' : '1fr'}; gap:2rem; margin-bottom:2rem;">
-            <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px;">
                 <h3 style="font-size:0.85rem; color:#64748b; margin-bottom:0.5rem;">BILL TO</h3>
                 ${inv.client_company_name ? `<p style="margin:0; font-weight:600;">${inv.client_company_name}</p>` : ''}
                 <p style="margin:0; font-weight:${inv.client_company_name ? '500' : '600'};">${inv.client_name || '-'}</p>
@@ -90,7 +90,7 @@ async function loadInvoice() {
                 ${inv.client_email ? `<p style="margin:0; font-size:0.9rem;">${inv.client_email}</p>` : ''}
                 ${inv.client_phone ? `<p style="margin:0; font-size:0.9rem;">${inv.client_phone}</p>` : ''}
             </div>
-            <div>
+            <div style="text-align:right; flex-shrink:0;">
                 <p style="margin:0;"><strong>Issue Date:</strong> ${inv.issue_date}</p>
                 <p style="margin:0.25rem 0;"><strong>Due Date:</strong> ${inv.due_date}</p>
                 ${inv.payment_terms_name ? `<p style="margin:0;"><strong>Terms:</strong> ${inv.payment_terms_name}</p>` : ''}
@@ -127,6 +127,14 @@ async function loadInvoice() {
             <div style="display:flex; justify-content:space-between; padding:0.5rem 0; font-weight:700; font-size:1.1rem; border-top:2px solid ${accent};"><span>Total</span><span>NGN ${total.toLocaleString('en-NG', {minimumFractionDigits:2})}</span></div>
             `}
         </div>
+        ${(company.bank_name || company.bank_account_number) ? `
+        <div style="margin-top:1.5rem; padding:1rem; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+            <p style="font-size:0.8rem; color:#64748b; margin:0 0 0.5rem 0; text-transform:uppercase; letter-spacing:0.05em;">Payment Details</p>
+            ${company.bank_name ? `<p style="margin:0;"><strong>Bank:</strong> ${company.bank_name}</p>` : ''}
+            ${company.bank_account_name ? `<p style="margin:0.25rem 0;"><strong>Account Name:</strong> ${company.bank_account_name}</p>` : ''}
+            ${company.bank_account_number ? `<p style="margin:0;"><strong>Account Number:</strong> ${company.bank_account_number}</p>` : ''}
+        </div>
+        ` : ''}
         ${inv.notes ? `<p style="margin-top:1.5rem; color:#64748b; font-size:0.9rem;">${inv.notes}</p>` : ''}
         ${inv.terms_conditions ? `<p style="margin-top:1rem; font-size:0.85rem; color:#64748b;">${inv.terms_conditions}</p>` : ''}
     </div>

@@ -116,7 +116,7 @@ body {
 }
 
 .auth-header img {
-    height: 48px;
+    height: 64px;
     margin-bottom: 1rem;
 }
 
@@ -189,7 +189,7 @@ body {
 }
 
 .logo-img {
-    height: 36px;
+    height: 48px;
     width: auto;
 }
 
@@ -282,6 +282,11 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--sidebar-text-active);
+    text-decoration: none;
+}
+
+.user-name:hover {
+    color: var(--accent);
 }
 
 .logout-link {
@@ -885,10 +890,15 @@ input[type="checkbox"] {
     color: var(--text);
 }
 
-.settings-form hr {
+.settings-form hr,
+.profile-form hr {
     margin: 2rem 0;
     border: none;
     border-top: 1px solid var(--border);
+}
+
+.profile-form .card {
+    max-width: 480px;
 }
 
 /* ========== Invoice View / Print ========== */

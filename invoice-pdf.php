@@ -73,7 +73,7 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
 <div class="invoice">
     <div class="header">
         <div>
-            <?php if (!empty($company['logo_url'])): ?><img src="<?= htmlspecialchars($company['logo_url']) ?>" alt="Logo" style="max-height:50px;"><br><?php endif; ?>
+            <?php if (!empty($company['logo_url'])): ?><img src="<?= htmlspecialchars($company['logo_url']) ?>" alt="Logo" style="max-height:80px;"><br><?php endif; ?>
             <h2 style="margin:0; color:<?= $accent ?>"><?= htmlspecialchars($company['company_name'] ?? 'Company') ?></h2>
             <?php if (!empty($company['address'])): ?><p style="margin:0.25rem 0; color:#64748b;"><?= nl2br(htmlspecialchars($company['address'])) ?></p><?php endif; ?>
             <?php if (!empty($company['phone'])): ?><p style="margin:0; color:#64748b;"><?= htmlspecialchars($company['phone']) ?></p><?php endif; ?>
@@ -122,6 +122,14 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
         <div class="grand"><span>Total</span><span>NGN <?= number_format($total, 2) ?></span></div>
         <?php endif; ?>
     </div>
+    <?php if (!empty($company['bank_name']) || !empty($company['bank_account_number'])): ?>
+    <div style="margin-top:1.5rem; padding:1rem; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+        <p style="font-size:0.8rem; color:#64748b; margin:0 0 0.5rem 0; text-transform:uppercase; letter-spacing:0.05em;">Payment Details</p>
+        <?php if (!empty($company['bank_name'])): ?><p style="margin:0;"><strong>Bank:</strong> <?= htmlspecialchars($company['bank_name']) ?></p><?php endif; ?>
+        <?php if (!empty($company['bank_account_name'])): ?><p style="margin:0.25rem 0;"><strong>Account Name:</strong> <?= htmlspecialchars($company['bank_account_name']) ?></p><?php endif; ?>
+        <?php if (!empty($company['bank_account_number'])): ?><p style="margin:0;"><strong>Account Number:</strong> <?= htmlspecialchars($company['bank_account_number']) ?></p><?php endif; ?>
+    </div>
+    <?php endif; ?>
     <?php if (!empty($inv['notes'])): ?><p style="margin-top:1.5rem; color:#64748b;"><?= nl2br(htmlspecialchars($inv['notes'])) ?></p><?php endif; ?>
 </div>
 <script>
