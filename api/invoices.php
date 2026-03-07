@@ -50,6 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     jsonResponse($list);
 }
 
+$validStatuses = ['draft', 'unpaid', 'paid', 'cancelled'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
     $clientId = (int)($input['client_id'] ?? 0);
@@ -74,10 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO invoices (invoice_number, client_id, status, payment_type, payment_terms_id, issue_date, due_date, notes, terms_conditions, template_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
+        $status = trim($input['status'] ?? '');
+        $status = in_array($status, $validStatuses) ? $status : 'draft';
         $stmt->execute([
             $invoiceNumber,
             $clientId,
-            $input['status'] ?? 'draft',
+            $status,
             $input['payment_type'] ?? 'full',
             $termsId,
             $issueDate,
@@ -132,9 +136,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             WHERE id=?
         ");
         $termsId = !empty($input['payment_terms_id']) ? (int)$input['payment_terms_id'] : null;
+        $status = trim($input['status'] ?? '');
+        $status = in_array($status, $validStatuses) ? $status : 'draft';
         $stmt->execute([
             (int)$input['client_id'],
-            $input['status'] ?? 'draft',
+            $status,
             $input['payment_type'] ?? 'full',
             $termsId,
             $input['issue_date'] ?? date('Y-m-d'),

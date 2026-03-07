@@ -283,6 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             (inv.payments || []).forEach(p => addPayment(p.amount, p.payment_date, p.notes));
         }
     } else {
+        document.getElementById('status').value = 'unpaid';
         addItem();
     }
 });
