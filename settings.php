@@ -1,6 +1,7 @@
 <?php
 $currentPage = 'settings';
 $pageTitle = 'Settings';
+$pageSubtitle = 'Company info and payment terms';
 require_once __DIR__ . '/includes/layout.php';
 ?>
 <div class="settings-form">
@@ -65,7 +66,7 @@ require_once __DIR__ . '/includes/layout.php';
     <h2 style="margin-bottom:1rem">Payment Terms</h2>
     <div class="section-header">
         <span></span>
-        <button type="button" class="btn btn-primary" onclick="openTermModal()">Add Term</button>
+        <button type="button" class="btn btn-primary" onclick="openTermModal()">+ Add Term</button>
     </div>
     <div class="table-wrap">
         <table class="data-table">
@@ -90,7 +91,7 @@ require_once __DIR__ . '/includes/layout.php';
     <div class="modal">
         <div class="modal-header">
             <h3 id="termModalTitle">Add Payment Term</h3>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="closeTermModal()">&times;</button>
+            <button type="button" class="btn btn-secondary btn-sm modal-close" onclick="closeTermModal()" aria-label="Close">&times;</button>
         </div>
         <form id="termForm" class="modal-body">
             <input type="hidden" id="termId">

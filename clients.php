@@ -1,12 +1,14 @@
 <?php
 $currentPage = 'clients';
 $pageTitle = 'Clients';
+$pageSubtitle = 'Your customer and company contacts';
 require_once __DIR__ . '/includes/layout.php';
 ?>
 <div class="section-header">
     <h2>All Clients</h2>
-    <button type="button" class="btn btn-primary" onclick="openClientModal()">Add Client</button>
+    <button type="button" class="btn btn-primary" onclick="openClientModal()">+ Add Client</button>
 </div>
+<div class="content-card">
 <div class="table-wrap">
     <table class="data-table">
         <thead>
@@ -29,7 +31,7 @@ require_once __DIR__ . '/includes/layout.php';
     <div class="modal">
         <div class="modal-header">
             <h3 id="clientModalTitle">Add Client</h3>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="closeClientModal()">&times;</button>
+            <button type="button" class="btn btn-secondary btn-sm modal-close" onclick="closeClientModal()" aria-label="Close">&times;</button>
         </div>
         <form id="clientForm" class="modal-body">
             <input type="hidden" id="clientId" name="id">
@@ -84,7 +86,7 @@ async function loadClients() {
                 <button type="button" class="btn btn-sm btn-danger" onclick="deleteClient(${c.id}, '${(c.name || '').replace(/'/g, "\\'")}')">Delete</button>
             </td>
         </tr>
-    `).join('') : '<tr><td colspan="6" class="text-muted">No clients yet. Add one to get started.</td></tr>';
+    `).join('') : '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">👥</div><div class="empty-state-title">No clients yet</div><div class="empty-state-text">Add your first client to create invoices</div><button type="button" class="btn btn-primary" onclick="openClientModal()" style="margin-top:1rem">+ Add Client</button></div></td></tr>';
 }
 
 function openClientModal(editId = null) {

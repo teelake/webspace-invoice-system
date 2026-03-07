@@ -57,7 +57,7 @@ CREATE TABLE invoices (
     id INT AUTO_INCREMENT PRIMARY KEY,
     invoice_number VARCHAR(50) NOT NULL UNIQUE,
     client_id INT NOT NULL,
-    status ENUM('draft', 'sent', 'paid', 'overdue', 'cancelled') DEFAULT 'draft',
+    status ENUM('draft', 'unpaid', 'paid', 'cancelled') DEFAULT 'draft',
     payment_type ENUM('full', 'installment') DEFAULT 'full',
     payment_terms_id INT,
     issue_date DATE NOT NULL,

@@ -1,8 +1,13 @@
 <?php
 $currentPage = 'dashboard';
 $pageTitle = 'Dashboard';
+$pageSubtitle = 'Overview of your invoices and revenue';
 require_once __DIR__ . '/includes/layout.php';
 ?>
+<div class="welcome-block">
+    <h2>Welcome back, <?= htmlspecialchars($user['name'] ?? '') ?>!</h2>
+    <p>Here's what's happening with your invoices today.</p>
+</div>
 <div class="stats-grid">
     <div class="stat-card">
         <span class="stat-value" id="statTotalInvoices">-</span>
@@ -24,8 +29,9 @@ require_once __DIR__ . '/includes/layout.php';
 <div class="dashboard-section">
     <div class="section-header">
         <h2>Recent Invoices</h2>
-        <a href="invoice-edit.php" class="btn btn-primary">New Invoice</a>
+        <a href="invoice-edit.php" class="btn btn-primary">+ New Invoice</a>
     </div>
+    <div class="content-card">
     <div class="table-wrap">
         <table class="data-table">
             <thead>
@@ -41,6 +47,7 @@ require_once __DIR__ . '/includes/layout.php';
                 <tr><td colspan="5" class="text-muted">Loading...</td></tr>
             </tbody>
         </table>
+    </div>
     </div>
 </div>
 <script>
@@ -67,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a href="invoice-edit.php?id=${inv.id}" class="btn btn-sm">Edit</a>
             </td>
         </tr>
-    `).join('') : '<tr><td colspan="5" class="text-muted">No invoices yet</td></tr>';
+    `).join('') : '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No invoices yet</div><div class="empty-state-text">Create your first invoice to get started</div><a href="invoice-edit.php" class="btn btn-primary" style="margin-top:1rem">+ New Invoice</a></div></td></tr>';
 });
 </script>
 <?php require_once __DIR__ . '/includes/layout-end.php'; ?>

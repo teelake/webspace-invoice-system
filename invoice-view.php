@@ -6,9 +6,10 @@ if (!$id) {
     exit;
 }
 $pageTitle = 'View Invoice';
+$pageSubtitle = 'Invoice details and actions';
 require_once __DIR__ . '/includes/layout.php';
 ?>
-<div class="invoice-actions no-print" style="margin-bottom:1rem; display:flex; gap:0.5rem; flex-wrap:wrap">
+<div class="invoice-actions no-print">
     <a href="invoice-edit.php?id=<?= $id ?>" class="btn btn-primary">Edit</a>
     <button type="button" class="btn btn-secondary" onclick="window.print()">Print</button>
     <a href="invoice-pdf.php?id=<?= $id ?>&print=1" class="btn btn-secondary" target="_blank">Download PDF</a>
@@ -23,7 +24,7 @@ require_once __DIR__ . '/includes/layout.php';
     <div class="modal">
         <div class="modal-header">
             <h3>Email Invoice</h3>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="closeEmailModal()">&times;</button>
+            <button type="button" class="btn btn-secondary btn-sm modal-close" onclick="closeEmailModal()" aria-label="Close">&times;</button>
         </div>
         <form id="emailForm" class="modal-body">
             <div class="form-group">

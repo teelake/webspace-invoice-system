@@ -2,10 +2,10 @@
 $currentPage = 'invoices';
 $pageTitle = 'Edit Invoice';
 $id = (int)($_GET['id'] ?? 0);
-if ($id) $pageTitle = 'Edit Invoice'; else $pageTitle = 'New Invoice';
+if ($id) { $pageTitle = 'Edit Invoice'; $pageSubtitle = 'Update invoice details'; } else { $pageTitle = 'New Invoice'; $pageSubtitle = 'Create a new invoice'; }
 require_once __DIR__ . '/includes/layout.php';
 ?>
-<div class="invoice-form">
+<div class="invoice-form content-card" style="padding: 1.5rem;">
     <form id="invoiceForm">
         <input type="hidden" id="invoiceId" value="<?= $id ?>">
         <div class="form-row">
@@ -23,9 +23,8 @@ require_once __DIR__ . '/includes/layout.php';
                 <label>Status</label>
                 <select id="status">
                     <option value="draft">Draft</option>
-                    <option value="sent">Sent</option>
+                    <option value="unpaid">Unpaid</option>
                     <option value="paid">Paid</option>
-                    <option value="overdue">Overdue</option>
                     <option value="cancelled">Cancelled</option>
                 </select>
             </div>
@@ -265,7 +264,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         due.setDate(due.getDate() + 30);
         document.getElementById('dueDate').value = due.toISOString().slice(0, 10);
     }
-    if (id) {
+    const isEdit = id && id !== '0';
+    if (isEdit) {
         const inv = await fetch(base + '/invoices.php?id=' + id).then(r => r.json());
         document.getElementById('clientId').value = inv.client_id;
         document.getElementById('invoiceNumber').value = inv.invoice_number;

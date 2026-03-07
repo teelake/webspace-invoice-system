@@ -58,6 +58,11 @@ $currentPage = $currentPage ?? 'dashboard';
     </aside>
     <main class="main-content">
         <header class="top-bar">
-            <h1 class="page-title"><?= htmlspecialchars($pageTitle ?? 'Dashboard') ?></h1>
+            <div>
+                <h1 class="page-title"><?= htmlspecialchars($pageTitle ?? 'Dashboard') ?></h1>
+                <?php if (!empty($pageSubtitle)): ?>
+                <p class="page-subtitle"><?= htmlspecialchars($pageSubtitle) ?></p>
+                <?php endif; ?>
+            </div>
         </header>
         <div class="page-content">

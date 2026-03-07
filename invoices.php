@@ -5,12 +5,14 @@ if (!empty($_GET['new'])) {
 }
 $currentPage = 'invoices';
 $pageTitle = 'Invoices';
+$pageSubtitle = 'Manage and track all your invoices';
 require_once __DIR__ . '/includes/layout.php';
 ?>
 <div class="section-header">
     <h2>All Invoices</h2>
-    <a href="invoice-edit.php" class="btn btn-primary">New Invoice</a>
+    <a href="invoice-edit.php" class="btn btn-primary">+ New Invoice</a>
 </div>
+<div class="content-card">
 <div class="table-wrap">
     <table class="data-table">
         <thead>
@@ -27,6 +29,7 @@ require_once __DIR__ . '/includes/layout.php';
             <tr><td colspan="6" class="text-muted">Loading...</td></tr>
         </tbody>
     </table>
+</div>
 </div>
 
 <script>
@@ -46,7 +49,7 @@ async function loadInvoices() {
                 <a href="invoice-edit.php?id=${inv.id}" class="btn btn-sm">Edit</a>
             </td>
         </tr>
-    `).join('') : '<tr><td colspan="6" class="text-muted">No invoices yet.</td></tr>';
+    `).join('') : '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No invoices yet</div><div class="empty-state-text">Create your first invoice to get started</div><a href="invoice-edit.php" class="btn btn-primary" style="margin-top:1rem">+ New Invoice</a></div></td></tr>';
 }
 document.addEventListener('DOMContentLoaded', loadInvoices);
 </script>

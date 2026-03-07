@@ -10,8 +10,8 @@ $stats = [];
 $stmt = $pdo->query("SELECT COUNT(*) as c FROM invoices");
 $stats['total_invoices'] = (int)$stmt->fetch()['c'];
 
-// Overdue
-$stmt = $pdo->query("SELECT COUNT(*) as c FROM invoices WHERE status IN ('sent', 'draft') AND due_date < CURDATE()");
+// Overdue (unpaid invoices past due date)
+$stmt = $pdo->query("SELECT COUNT(*) as c FROM invoices WHERE status = 'unpaid' AND due_date < CURDATE()");
 $stats['overdue'] = (int)$stmt->fetch()['c'];
 
 // Draft
@@ -31,7 +31,7 @@ $stmt = $pdo->query("
            (SELECT COALESCE(SUM(amount), 0) FROM invoice_items WHERE invoice_id = i.id) as subtotal,
            (SELECT COALESCE(SUM(amount), 0) FROM invoice_payments WHERE invoice_id = i.id) as paid
     FROM invoices i
-    WHERE i.status IN ('sent', 'draft') AND i.status != 'cancelled'
+    WHERE i.status IN ('unpaid', 'draft') AND i.status != 'cancelled'
 ");
 $outstanding = 0;
 while ($row = $stmt->fetch()) {
