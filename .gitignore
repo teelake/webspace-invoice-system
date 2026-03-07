@@ -1,0 +1,15 @@
+# Config with secrets (copy config/database.example.php to config/database.php)
+config/database.php
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
