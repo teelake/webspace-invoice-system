@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/../config/app.php';
-require_once __DIR__ . '/../config/database.php';
+
+$dbConfig = __DIR__ . '/../config/database.php';
+if (!file_exists($dbConfig)) {
+    header('Location: ' . APP_URL . '/setup.php');
+    exit;
+}
+require_once $dbConfig;
 
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
