@@ -66,6 +66,12 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
         .totals div { display: flex; justify-content: space-between; padding: 0.35rem 0; }
         .grand { font-weight: 700; font-size: 1.1rem; border-top: 2px solid <?= $accent ?>; padding-top: 0.5rem; margin-top: 0.5rem; }
         .text-right { text-align: right; }
+        .badge { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 6px; }
+        .badge-draft { background: #f1f5f9; color: #475569; }
+        .badge-unpaid { background: #dbeafe; color: #2563eb; }
+        .badge-paid { background: #d1fae5; color: #059669; }
+        .badge-overdue { background: #fee2e2; color: #dc2626; }
+        .badge-cancelled { background: #f1f5f9; color: #64748b; }
         @media print { body { padding: 0; } }
     </style>
 </head>
@@ -81,7 +87,18 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
         <div style="text-align:right;">
             <h1>INVOICE</h1>
             <p style="font-weight:600;">#<?= htmlspecialchars($inv['invoice_number']) ?></p>
-            <p style="color:#64748b;"><?= $inv['issue_date'] ?> | Due: <?= $inv['due_date'] ?></p>
+            <?php
+            $statusLabel = $inv['status'];
+            $statusClass = $inv['status'];
+            if ($inv['status'] === 'unpaid' && $inv['due_date'] < date('Y-m-d')) {
+                $statusLabel = 'Overdue';
+                $statusClass = 'overdue';
+            } else {
+                $statusLabel = ucfirst($inv['status']);
+            }
+            ?>
+            <p style="margin:0; color:#64748b; font-size:0.9rem;">Status: <span class="badge badge-<?= $statusClass ?>"><?= htmlspecialchars($statusLabel) ?></span></p>
+            <p style="margin:0.25rem 0 0 0; color:#64748b;"><?= $inv['issue_date'] ?> | Due: <?= $inv['due_date'] ?></p>
         </div>
     </div>
     <div style="margin-bottom:2rem;">
