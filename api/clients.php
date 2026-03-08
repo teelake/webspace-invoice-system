@@ -11,8 +11,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (!$client) jsonResponse(['error' => 'Not found'], 404);
         jsonResponse($client);
     }
-    $stmt = $pdo->query("SELECT * FROM clients ORDER BY name");
-    jsonResponse($stmt->fetchAll());
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $limit = min(100, max(10, (int)($_GET['limit'] ?? 20)));
+    $offset = ($page - 1) * $limit;
+    $search = trim($_GET['search'] ?? '');
+    $where = [];
+    $params = [];
+    if ($search !== '') {
+        $term = '%' . $search . '%';
+        $where[] = '(name LIKE ? OR company_name LIKE ? OR email LIKE ? OR phone LIKE ? OR address LIKE ?)';
+        $params = array_merge($params, [$term, $term, $term, $term, $term]);
+    }
+    $sqlWhere = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM clients $sqlWhere");
+    $countStmt->execute($params);
+    $total = (int)$countStmt->fetchColumn();
+    $stmt = $pdo->prepare("SELECT * FROM clients $sqlWhere ORDER BY id DESC LIMIT " . (int)$limit . " OFFSET " . (int)$offset);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll();
+    jsonResponse([
+        'items' => $rows,
+        'total' => $total,
+        'page' => $page,
+        'limit' => $limit,
+        'pages' => (int)ceil($total / $limit)
+    ]);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

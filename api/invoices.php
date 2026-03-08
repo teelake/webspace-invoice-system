@@ -2,6 +2,8 @@
 require_once __DIR__ . '/init.php';
 $pdo = getDB();
 
+$validStatuses = ['draft', 'unpaid', 'paid', 'cancelled'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'] ?? null;
     if ($id) {
@@ -28,15 +30,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $inv['payments'] = $stmt->fetchAll();
         jsonResponse($inv);
     }
-    $stmt = $pdo->query("
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $limit = min(100, max(10, (int)($_GET['limit'] ?? 20)));
+    $offset = ($page - 1) * $limit;
+    $search = trim($_GET['search'] ?? '');
+    $statusFilter = trim($_GET['status'] ?? '');
+    $where = [];
+    $params = [];
+    if ($search !== '') {
+        $term = '%' . $search . '%';
+        $where[] = '(i.invoice_number LIKE ? OR c.name LIKE ? OR c.company_name LIKE ?)';
+        $params = array_merge($params, [$term, $term, $term]);
+    }
+    if ($statusFilter !== '' && in_array($statusFilter, $validStatuses)) {
+        $where[] = 'i.status = ?';
+        $params[] = $statusFilter;
+    }
+    $sqlWhere = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+    $countStmt = $pdo->prepare("
+        SELECT COUNT(*) FROM invoices i
+        LEFT JOIN clients c ON i.client_id = c.id
+        $sqlWhere
+    ");
+    $countStmt->execute($params);
+    $total = (int)$countStmt->fetchColumn();
+    $stmt = $pdo->prepare("
         SELECT i.id, i.invoice_number, i.status, i.payment_type, i.issue_date, i.due_date, i.created_at,
                c.name as client_name, c.company_name as client_company_name,
                (SELECT COALESCE(SUM(amount), 0) FROM invoice_items WHERE invoice_id = i.id) as subtotal,
                (SELECT COALESCE(SUM(amount), 0) FROM invoice_payments WHERE invoice_id = i.id) as paid_amount
         FROM invoices i
         LEFT JOIN clients c ON i.client_id = c.id
+        $sqlWhere
         ORDER BY i.created_at DESC
+        LIMIT " . (int)$limit . " OFFSET " . (int)$offset . "
     ");
+    $stmt->execute($params);
     $list = $stmt->fetchAll();
     $company = getCompanySettings();
     $taxRate = (float)($company['tax_rate'] ?? 0);
@@ -47,10 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $row['total'] = $row['subtotal'] + $row['tax'];
         $row['balance'] = $row['total'] - $row['paid_amount'];
     }
-    jsonResponse($list);
+    jsonResponse([
+        'items' => $list,
+        'total' => $total,
+        'page' => $page,
+        'limit' => $limit,
+        'pages' => (int)ceil($total / $limit)
+    ]);
 }
-
-$validStatuses = ['draft', 'unpaid', 'paid', 'cancelled'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
