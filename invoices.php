@@ -135,7 +135,8 @@ async function updateStatus(id, status) {
         }
         loadInvoices();
     } catch (e) {
-        alert(e.message || 'Failed to update status');
+        if (typeof showToast === 'function') showToast(e.message || 'Failed to update status', 'error');
+        else alert(e.message || 'Failed to update status');
         loadInvoices();
     }
 }

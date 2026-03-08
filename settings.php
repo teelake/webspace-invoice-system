@@ -15,7 +15,11 @@ require_once __DIR__ . '/includes/layout.php';
             </div>
             <div class="form-group">
                 <label>Logo URL</label>
-                <input type="url" id="logoUrl" name="logo_url" placeholder="https://...">
+                <input type="url" id="logoUrl" name="logo_url" placeholder="https://... or /assets/images/logo.png">
+                <div id="logoPreview" class="logo-preview" style="display:none; margin-top:0.5rem;">
+                    <span class="logo-preview-label" id="logoPreviewLabel">Preview (80px on invoice):</span>
+                    <img id="logoPreviewImg" src="" alt="Logo preview" class="logo-preview-img">
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -198,9 +202,11 @@ document.getElementById('companyForm').addEventListener('submit', async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        alert('Settings saved');
+        if (typeof showToast === 'function') showToast('Settings saved', 'success');
+        else alert('Settings saved');
     } catch (err) {
-        alert(err.message || 'Failed to save');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed to save', 'error');
+        else alert(err.message || 'Failed to save');
     }
 });
 
@@ -245,8 +251,10 @@ document.getElementById('termForm').addEventListener('submit', async (e) => {
         }
         closeTermModal();
         loadTerms();
+        if (typeof showToast === 'function') showToast('Payment term saved', 'success');
     } catch (err) {
-        alert(err.message || 'Failed');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed', 'error');
+        else alert(err.message || 'Failed');
     }
 });
 
@@ -255,14 +263,44 @@ async function deleteTerm(id) {
     try {
         await fetch(base + '/payment-terms.php?id=' + id, { method: 'DELETE' });
         loadTerms();
+        if (typeof showToast === 'function') showToast('Payment term deleted', 'success');
     } catch (err) {
-        alert(err.message || 'Failed');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed', 'error');
+        else alert(err.message || 'Failed');
     }
 }
+
+function updateLogoPreview() {
+    const url = document.getElementById('logoUrl').value.trim();
+    const preview = document.getElementById('logoPreview');
+    const img = document.getElementById('logoPreviewImg');
+    const label = document.getElementById('logoPreviewLabel');
+    if (!url) {
+        preview.style.display = 'none';
+        return;
+    }
+    const appUrl = base.replace(/\/api$/, '');
+    const src = url.startsWith('http') ? url : (appUrl + '/' + url.replace(/^\//, ''));
+    img.src = src;
+    label.textContent = 'Preview (80px on invoice):';
+    img.onload = () => {
+        preview.style.display = 'block';
+        img.style.display = 'block';
+    };
+    img.onerror = () => {
+        preview.style.display = 'block';
+        img.style.display = 'none';
+        label.textContent = 'Could not load image. Check URL.';
+    };
+}
+
+document.getElementById('logoUrl').addEventListener('input', updateLogoPreview);
+document.getElementById('logoUrl').addEventListener('blur', updateLogoPreview);
 
 document.addEventListener('DOMContentLoaded', () => {
     loadCompany();
     loadTerms();
+    updateLogoPreview();
 });
 </script>
 <?php require_once __DIR__ . '/includes/layout-end.php'; ?>

@@ -108,14 +108,15 @@ let clients = [], paymentTerms = [], templates = [], company = {};
 let itemIndex = 0, paymentIndex = 0;
 
 async function loadData() {
-    [clients, paymentTerms, templates, company] = await Promise.all([
-        fetch(base + '/clients.php').then(r => r.json()),
+    const [clientsRes, paymentTerms, templates, company] = await Promise.all([
+        fetch(base + '/clients.php?limit=1000&page=1').then(r => r.json()),
         fetch(base + '/payment-terms.php').then(r => r.json()),
         fetch(base + '/templates.php').then(r => r.json()),
         fetch(base + '/company.php').then(r => r.json())
     ]);
+    clients = clientsRes?.items ?? (Array.isArray(clientsRes) ? clientsRes : []);
     const sel = document.getElementById('clientId');
-    sel.innerHTML = '<option value="">Select client...</option>' + clients.map(c => {
+    sel.innerHTML = '<option value="">Select client...</option>' + (clients || []).map(c => {
         const label = c.company_name ? `${c.company_name} (${c.name})` : c.name;
         return `<option value="${c.id}">${label}</option>`;
     }).join('');
@@ -215,9 +216,17 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
     const id = document.getElementById('invoiceId').value;
     const isEdit = id && id !== '0';
     const items = getItems();
-    if (!items.length) { alert('Add at least one line item'); return; }
+    if (!items.length) {
+        if (typeof showToast === 'function') showToast('Add at least one line item', 'error');
+        else alert('Add at least one line item');
+        return;
+    }
     const clientId = document.getElementById('clientId').value;
-    if (!clientId) { alert('Select a client'); return; }
+    if (!clientId) {
+        if (typeof showToast === 'function') showToast('Select a client', 'error');
+        else alert('Select a client');
+        return;
+    }
     const statusValue = document.getElementById('status').value || 'draft';
     const data = {
         client_id: clientId,
@@ -247,7 +256,8 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
         if (!res.ok) throw new Error(inv.error || 'Failed');
         window.location.href = 'invoice-view.php?id=' + (inv.id || id);
     } catch (err) {
-        alert(err.message || 'Failed to save');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed to save', 'error');
+        else alert(err.message || 'Failed to save');
     }
 });
 

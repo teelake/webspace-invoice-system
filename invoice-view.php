@@ -169,10 +169,12 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed');
-        alert('Email sent successfully');
+        if (typeof showToast === 'function') showToast('Email sent successfully', 'success');
+        else alert('Email sent successfully');
         closeEmailModal();
     } catch (err) {
-        alert(err.message || 'Failed to send email');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed to send email', 'error');
+        else alert(err.message || 'Failed to send email');
     }
 });
 

@@ -63,10 +63,12 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         });
         const result = await res.json();
         if (!res.ok) throw new Error(result.error || 'Failed to update');
-        alert('Profile updated successfully');
+        if (typeof showToast === 'function') showToast('Profile updated successfully', 'success');
+        else alert('Profile updated successfully');
         window.location.reload();
     } catch (err) {
-        alert(err.message || 'Failed to update profile');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed to update profile', 'error');
+        else alert(err.message || 'Failed to update profile');
     }
 });
 
@@ -76,7 +78,8 @@ document.getElementById('passwordForm').addEventListener('submit', async (e) => 
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (newPassword !== confirmPassword) {
-        alert('New passwords do not match');
+        if (typeof showToast === 'function') showToast('New passwords do not match', 'error');
+        else alert('New passwords do not match');
         return;
     }
 
@@ -93,10 +96,12 @@ document.getElementById('passwordForm').addEventListener('submit', async (e) => 
         });
         const result = await res.json();
         if (!res.ok) throw new Error(result.error || 'Failed to update password');
-        alert('Password updated successfully');
+        if (typeof showToast === 'function') showToast('Password updated successfully', 'success');
+        else alert('Password updated successfully');
         document.getElementById('passwordForm').reset();
     } catch (err) {
-        alert(err.message || 'Failed to update password');
+        if (typeof showToast === 'function') showToast(err.message || 'Failed to update password', 'error');
+        else alert(err.message || 'Failed to update password');
     }
 });
 
