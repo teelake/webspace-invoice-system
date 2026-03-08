@@ -523,20 +523,23 @@ input[type="checkbox"] {
 /* ========== Stats Cards ========== */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
     margin-bottom: 1.75rem;
 }
 
 .stat-card {
     background: var(--card-bg);
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-radius: var(--radius);
     border: 1px solid var(--card-border);
     box-shadow: var(--card-shadow);
-    transition: box-shadow 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+    transition: box-shadow 0.2s var(--ease-out), transform 0.2s var(--ease-out), border-color 0.2s;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
 }
 
 .stat-card::before {
@@ -544,33 +547,55 @@ input[type="checkbox"] {
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 3px;
     height: 100%;
 }
 
-.stat-card:nth-child(1)::before { background: linear-gradient(180deg, var(--primary), #3b82f6); }
-.stat-card:nth-child(2)::before { background: linear-gradient(180deg, var(--danger), #ef4444); }
-.stat-card:nth-child(3)::before { background: linear-gradient(180deg, var(--warning), #f59e0b); }
-.stat-card:nth-child(4)::before { background: linear-gradient(180deg, var(--success), #10b981); }
+.stat-card-primary::before { background: linear-gradient(180deg, var(--primary), #3b82f6); }
+.stat-card-danger::before { background: linear-gradient(180deg, var(--danger), #ef4444); }
+.stat-card-warning::before { background: linear-gradient(180deg, var(--warning), #f59e0b); }
+.stat-card-success::before { background: linear-gradient(180deg, var(--success), #10b981); }
 
 .stat-card:hover {
     box-shadow: var(--card-shadow-hover);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
+}
+
+.stat-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+}
+
+.stat-card-primary .stat-icon { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.stat-card-danger .stat-icon { background: rgba(220, 38, 38, 0.1); color: var(--danger); }
+.stat-card-warning .stat-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.stat-card-success .stat-icon { background: rgba(5, 150, 105, 0.1); color: var(--success); }
+
+.stat-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .stat-value {
     display: block;
-    font-size: 1.875rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
 }
 
 .stat-label {
-    font-size: 0.85rem;
+    display: block;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    margin-top: 0.35rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
 }
 
 /* ========== Filters & Pagination ========== */
@@ -649,15 +674,16 @@ input[type="checkbox"] {
 
 .data-table th,
 .data-table td {
-    padding: 0.875rem 1.25rem;
+    padding: 0.625rem 1rem;
     text-align: left;
     border-bottom: 1px solid var(--border);
+    font-size: 0.8125rem;
 }
 
 .data-table th {
     background: #f8fafc;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -674,6 +700,23 @@ input[type="checkbox"] {
 .data-table tbody td:first-child {
     font-weight: 500;
     color: var(--text);
+}
+
+/* Action buttons: keep on same line, aligned */
+.data-table td:last-child {
+    white-space: nowrap;
+}
+
+.data-table td:last-child .btn,
+.data-table td:last-child .btn-sm,
+.data-table td:last-child a.btn {
+    margin-right: 0.35rem;
+}
+
+.data-table td:last-child .btn:last-child,
+.data-table td:last-child .btn-sm:last-child,
+.data-table td:last-child a.btn:last-child {
+    margin-right: 0;
 }
 
 .status-select {

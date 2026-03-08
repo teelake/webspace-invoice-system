@@ -9,21 +9,41 @@ require_once __DIR__ . '/includes/layout.php';
     <p>Here's what's happening with your invoices today.</p>
 </div>
 <div class="stats-grid">
-    <div class="stat-card">
-        <span class="stat-value" id="statTotalInvoices">-</span>
-        <span class="stat-label">Total Invoices</span>
+    <div class="stat-card stat-card-primary">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="stat-content">
+            <span class="stat-value" id="statTotalInvoices">-</span>
+            <span class="stat-label">Total Invoices</span>
+        </div>
     </div>
-    <div class="stat-card">
-        <span class="stat-value" id="statOverdue">-</span>
-        <span class="stat-label">Overdue</span>
+    <div class="stat-card stat-card-danger">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="stat-content">
+            <span class="stat-value" id="statOverdue">-</span>
+            <span class="stat-label">Overdue</span>
+        </div>
     </div>
-    <div class="stat-card">
-        <span class="stat-value" id="statOutstanding">-</span>
-        <span class="stat-label">Outstanding (NGN)</span>
+    <div class="stat-card stat-card-warning">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="stat-content">
+            <span class="stat-value" id="statOutstanding">-</span>
+            <span class="stat-label">Outstanding</span>
+        </div>
     </div>
-    <div class="stat-card">
-        <span class="stat-value" id="statPaid">-</span>
-        <span class="stat-label">Total Collected (NGN)</span>
+    <div class="stat-card stat-card-success">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="stat-content">
+            <span class="stat-value" id="statPaid">-</span>
+            <span class="stat-label">Total Collected</span>
+        </div>
     </div>
 </div>
 <div class="dashboard-section">
@@ -53,16 +73,17 @@ require_once __DIR__ . '/includes/layout.php';
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     const base = '<?= APP_URL ?>/api';
-    const [stats, invoices] = await Promise.all([
+    const [stats, invoicesRes] = await Promise.all([
         fetch(base + '/stats.php').then(r => r.json()),
-        fetch(base + '/invoices.php').then(r => r.json())
+        fetch(base + '/invoices.php?limit=5&page=1').then(r => r.json())
     ]);
     document.getElementById('statTotalInvoices').textContent = stats.total_invoices;
     document.getElementById('statOverdue').textContent = stats.overdue;
     document.getElementById('statOutstanding').textContent = formatMoney(stats.outstanding);
     document.getElementById('statPaid').textContent = formatMoney(stats.total_paid);
     const tbody = document.getElementById('recentInvoices');
-    const recent = (invoices || []).slice(0, 5);
+    const invoices = invoicesRes?.items ?? invoicesRes ?? [];
+    const recent = Array.isArray(invoices) ? invoices.slice(0, 5) : [];
     tbody.innerHTML = recent.length ? recent.map(inv => `
         <tr>
             <td>${inv.invoice_number}</td>
