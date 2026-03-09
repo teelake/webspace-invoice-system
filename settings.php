@@ -14,10 +14,11 @@ require_once __DIR__ . '/includes/layout.php';
                 <input type="text" id="companyName" name="company_name">
             </div>
             <div class="form-group">
-                <label>Logo URL</label>
-                <input type="url" id="logoUrl" name="logo_url" placeholder="https://... or /assets/images/logo.png">
+                <label>Company Logo</label>
+                <input type="file" id="logoFile" name="logo" accept="image/png,image/jpeg,image/gif,image/webp">
+                <p class="form-hint">PNG, JPG, GIF or WebP. Max 2MB.</p>
                 <div id="logoPreview" class="logo-preview" style="display:none; margin-top:0.5rem;">
-                    <span class="logo-preview-label" id="logoPreviewLabel">Preview (80px on invoice):</span>
+                    <span class="logo-preview-label" id="logoPreviewLabel">Current logo (80px on invoice):</span>
                     <img id="logoPreviewImg" src="" alt="Logo preview" class="logo-preview-img">
                 </div>
             </div>
@@ -146,7 +147,7 @@ const base = '<?= APP_URL ?>/api';
 async function loadCompany() {
     const c = await fetch(base + '/company.php').then(r => r.json());
     document.getElementById('companyName').value = c.company_name || '';
-    document.getElementById('logoUrl').value = c.logo_url || '';
+    document.getElementById('logoFile').value = '';
     document.getElementById('address').value = c.address || '';
     document.getElementById('phone').value = c.phone || '';
     document.getElementById('email').value = c.email || '';
@@ -180,11 +181,22 @@ async function loadTerms() {
 
 document.getElementById('companyForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = {
-        company_name: document.getElementById('companyName').value,
-        logo_url: document.getElementById('logoUrl').value,
-        address: document.getElementById('address').value,
-        phone: document.getElementById('phone').value,
+    const logoInput = document.getElementById('logoFile');
+    try {
+        if (logoInput.files && logoInput.files[0]) {
+            const fd = new FormData();
+            fd.append('logo', logoInput.files[0]);
+            const upRes = await fetch(base + '/company-logo.php', {
+                method: 'POST',
+                body: fd
+            });
+            const upData = await upRes.json();
+            if (!upRes.ok) throw new Error(upData.error || 'Logo upload failed');
+        }
+        const data = {
+            company_name: document.getElementById('companyName').value,
+            address: document.getElementById('address').value,
+            phone: document.getElementById('phone').value,
         email: document.getElementById('email').value,
         website: document.getElementById('website').value,
         bank_name: document.getElementById('bankName').value,
@@ -195,8 +207,7 @@ document.getElementById('companyForm').addEventListener('submit', async (e) => {
         tax_rate: parseFloat(document.getElementById('taxRate').value) || 0,
         invoice_prefix: document.getElementById('invoicePrefix').value,
         invoice_next_number: parseInt(document.getElementById('invoiceNextNumber').value) || 1
-    };
-    try {
+        };
         await fetch(base + '/company.php', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -204,6 +215,8 @@ document.getElementById('companyForm').addEventListener('submit', async (e) => {
         });
         if (typeof showToast === 'function') showToast('Settings saved', 'success');
         else alert('Settings saved');
+        logoInput.value = '';
+        loadCompany();
     } catch (err) {
         if (typeof showToast === 'function') showToast(err.message || 'Failed to save', 'error');
         else alert(err.message || 'Failed to save');
@@ -270,8 +283,7 @@ async function deleteTerm(id) {
     }
 }
 
-function updateLogoPreview() {
-    const url = document.getElementById('logoUrl').value.trim();
+function updateLogoPreview(url) {
     const preview = document.getElementById('logoPreview');
     const img = document.getElementById('logoPreviewImg');
     const label = document.getElementById('logoPreviewLabel');
@@ -279,28 +291,33 @@ function updateLogoPreview() {
         preview.style.display = 'none';
         return;
     }
-    const appUrl = base.replace(/\/api$/, '');
-    const src = url.startsWith('http') ? url : (appUrl + '/' + url.replace(/^\//, ''));
-    img.src = src;
-    label.textContent = 'Preview (80px on invoice):';
+    img.src = url;
+    label.textContent = 'Current logo (80px on invoice):';
+    img.style.display = 'block';
     img.onload = () => {
         preview.style.display = 'block';
-        img.style.display = 'block';
     };
     img.onerror = () => {
-        preview.style.display = 'block';
-        img.style.display = 'none';
-        label.textContent = 'Could not load image. Check URL.';
+        preview.style.display = 'none';
     };
 }
 
-document.getElementById('logoUrl').addEventListener('input', updateLogoPreview);
-document.getElementById('logoUrl').addEventListener('blur', updateLogoPreview);
+document.getElementById('logoFile').addEventListener('change', async function() {
+    if (this.files && this.files[0]) {
+        const url = URL.createObjectURL(this.files[0]);
+        document.getElementById('logoPreviewLabel').textContent = 'New logo preview:';
+        updateLogoPreview(url);
+    } else {
+        const c = await fetch(base + '/company.php').then(r => r.json());
+        updateLogoPreview(c.logo_url || null);
+    }
+});
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadCompany();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadCompany();
     loadTerms();
-    updateLogoPreview();
+    const c = await fetch(base + '/company.php').then(r => r.json());
+    updateLogoPreview(c.logo_url || null);
 });
 </script>
 <?php require_once __DIR__ . '/includes/layout-end.php'; ?>
