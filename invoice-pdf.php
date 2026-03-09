@@ -55,7 +55,7 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
     <meta charset="UTF-8">
     <title>Invoice <?= htmlspecialchars($inv['invoice_number']) ?></title>
     <style>
-        body { font-family: system-ui, sans-serif; margin: 0; padding: 2rem; color: #1e293b; }
+        body { font-family: system-ui, sans-serif; margin: 0; padding: 1.5rem 2rem 2rem 1rem; color: #1e293b; }
         .invoice { max-width: 800px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; margin-bottom: 2rem; }
         .header h1 { color: <?= $accent ?>; margin: 0; font-size: 1.75rem; }
@@ -79,7 +79,7 @@ $accent = $tpl['accentColor'] ?? '#2563eb';
 <div class="invoice">
     <div class="header">
         <div>
-            <?php if (!empty($company['logo_url'])): ?><img src="<?= htmlspecialchars($company['logo_url']) ?>" alt="Logo" style="height:80px; width:auto; display:block; margin-bottom:0.35rem;"><?php else: ?><h2 style="margin:0; color:<?= $accent ?>"><?= htmlspecialchars($company['company_name'] ?? 'Company') ?></h2><?php endif; ?>
+            <?php if (!empty($company['logo_url'])): ?><img src="<?= htmlspecialchars($company['logo_url']) ?>" alt="Logo" style="height:64px; width:auto; display:block; margin:0 0 0.35rem 0;"><?php else: ?><h2 style="margin:0; color:<?= $accent ?>"><?= htmlspecialchars($company['company_name'] ?? 'Company') ?></h2><?php endif; ?>
             <?php if (!empty($company['address'])): ?><p style="margin:0.15rem 0 0 0; color:#64748b;"><?= nl2br(htmlspecialchars($company['address'])) ?></p><?php endif; ?>
             <?php if (!empty($company['phone'])): ?><p style="margin:0; color:#64748b;"><?= htmlspecialchars($company['phone']) ?></p><?php endif; ?>
         </div>

@@ -18,7 +18,7 @@ require_once __DIR__ . '/includes/layout.php';
                 <input type="file" id="logoFile" name="logo" accept="image/png,image/jpeg,image/gif,image/webp">
                 <p class="form-hint">PNG, JPG, GIF or WebP. Max 2MB.</p>
                 <div id="logoPreview" class="logo-preview" style="display:none; margin-top:0.5rem;">
-                    <span class="logo-preview-label" id="logoPreviewLabel">Current logo (80px on invoice):</span>
+                    <span class="logo-preview-label" id="logoPreviewLabel">Current logo (64px on invoice):</span>
                     <img id="logoPreviewImg" src="" alt="Logo preview" class="logo-preview-img">
                 </div>
             </div>
@@ -292,7 +292,7 @@ function updateLogoPreview(url) {
         return;
     }
     img.src = url;
-    label.textContent = 'Current logo (80px on invoice):';
+    label.textContent = 'Current logo (64px on invoice):';
     img.style.display = 'block';
     img.onload = () => {
         preview.style.display = 'block';
