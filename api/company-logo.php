@@ -57,7 +57,14 @@ if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
     jsonResponse(['error' => 'Failed to save file'], 500);
 }
 
-$logoUrl = rtrim(APP_URL, '/') . '/uploads/' . $filename;
+// Build URL from current request so it works in any environment (localhost, staging, production)
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$script = $_SERVER['SCRIPT_NAME'] ?? '/api/company-logo.php';
+$appRoot = rtrim(dirname(dirname($script)), '/');
+$baseUrl = $scheme . '://' . $host . $appRoot;
+// Add cache-busting so browser fetches new logo after upload
+$logoUrl = $baseUrl . '/uploads/' . $filename . '?v=' . time();
 
 $stmt = $pdo->prepare("UPDATE company_settings SET logo_url = ? WHERE id = 1");
 $stmt->execute([$logoUrl]);

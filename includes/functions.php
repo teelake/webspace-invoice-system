@@ -13,7 +13,16 @@ function jsonResponse($data, $status = 200) {
 function getCompanySettings() {
     $pdo = getDB();
     $stmt = $pdo->query("SELECT * FROM company_settings WHERE id = 1");
-    return $stmt->fetch() ?: [];
+    $settings = $stmt->fetch() ?: [];
+    // Resolve relative logo URL to full URL for invoice/PDF display
+    if (!empty($settings['logo_url']) && !preg_match('#^https?://#', $settings['logo_url'])) {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $script = $_SERVER['SCRIPT_NAME'] ?? '';
+        $appRoot = $script ? rtrim(dirname($script), '/') : '';
+        $settings['logo_url'] = $scheme . '://' . $host . $appRoot . '/' . ltrim($settings['logo_url'], '/');
+    }
+    return $settings;
 }
 
 function getNextInvoiceNumber() {

@@ -4,6 +4,15 @@ $pdo = getDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $settings = getCompanySettings();
+    // Resolve relative logo URL to full URL so it works in all contexts (invoice, PDF, email)
+    if (!empty($settings['logo_url']) && !preg_match('#^https?://#', $settings['logo_url'])) {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $script = $_SERVER['SCRIPT_NAME'] ?? '/api/company.php';
+        // API is in api/ subdir, so go up one level to get app root
+        $appRoot = rtrim(dirname(dirname($script)), '/');
+        $settings['logo_url'] = $scheme . '://' . $host . $appRoot . '/' . ltrim($settings['logo_url'], '/');
+    }
     jsonResponse($settings);
 }
 
