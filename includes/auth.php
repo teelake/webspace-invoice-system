@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/app.php';
 
 $dbConfig = __DIR__ . '/../config/database.php';
 if (!file_exists($dbConfig)) {
-    header('Location: ' . APP_URL . '/setup.php');
+    header('Location: ' . APP_URL . '/setup');
     exit;
 }
 require_once $dbConfig;
@@ -28,7 +28,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: ' . APP_URL . '/index.php');
+        header('Location: ' . APP_URL . '/');
         exit;
     }
 }
@@ -56,7 +56,7 @@ function login($email, $password) {
 
 function logout() {
     session_destroy();
-    header('Location: ' . APP_URL . '/index.php');
+    header('Location: ' . APP_URL . '/');
     exit;
 }
 

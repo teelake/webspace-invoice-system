@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 
 if (isLoggedIn()) {
-    header('Location: ' . APP_URL . '/dashboard.php');
+    header('Location: ' . APP_URL . '/dashboard');
     exit;
 }
 
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $token = generateResetToken($email);
         if ($token) {
-            $resetLink = APP_URL . '/reset-password.php?token=' . $token;
+            $resetLink = APP_URL . '/reset-password?token=' . $token;
             $body = "Click the link below to reset your password:<br><br><a href=\"$resetLink\">Reset Password</a><br><br>Link expires in 1 hour.";
             if (sendMail($email, 'Reset your password - ' . APP_NAME, $body)) {
                 $message = 'If that email exists, we\'ve sent a reset link. Check your inbox.';
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-primary btn-block">Send Reset Link</button>
         </form>
         <?php endif; ?>
-        <a href="<?= APP_URL ?>/index.php" class="auth-link">Back to login</a>
+        <a href="<?= APP_URL ?>/" class="auth-link">Back to login</a>
     </div>
 </body>
 </html>

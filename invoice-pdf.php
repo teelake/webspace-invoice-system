@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/functions.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id || !isLoggedIn()) {
-    header('Location: index.php');
+    header('Location: ' . APP_URL . '/');
     exit;
 }
 
@@ -24,7 +24,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$id]);
 $inv = $stmt->fetch();
 if (!$inv) {
-    header('Location: invoices.php');
+    header('Location: ' . APP_URL . '/invoices');
     exit;
 }
 

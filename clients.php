@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/layout.php';
 ?>
 <div class="section-header">
     <h2>All Clients</h2>
-    <a href="client-edit.php" class="btn btn-primary">+ Add Client</a>
+    <a href="client-edit" class="btn btn-primary">+ Add Client</a>
 </div>
 <div class="content-card">
 <div class="filters-bar">
@@ -66,11 +66,11 @@ async function loadClients() {
             <td>${c.phone || '-'}</td>
             <td>${(c.address || '').substring(0, 40)}${(c.address || '').length > 40 ? '...' : ''}</td>
             <td>
-                <a href="client-edit.php?id=${c.id}" class="btn btn-sm btn-secondary">Edit</a>
+                <a href="client-edit?id=${c.id}" class="btn btn-sm btn-secondary">Edit</a>
                 <button type="button" class="btn btn-sm btn-danger" onclick="deleteClient(${c.id}, '${(c.name || '').replace(/'/g, "\\'")}')">Delete</button>
             </td>
         </tr>
-    `).join('') : '<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">👥</div><div class="empty-state-title">No clients yet</div><div class="empty-state-text">Add your first client to create invoices</div><a href="client-edit.php" class="btn btn-primary" style="margin-top:1rem">+ Add Client</a></div></td></tr>';
+    `).join('') : '<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">👥</div><div class="empty-state-title">No clients yet</div><div class="empty-state-text">Add your first client to create invoices</div><a href="client-edit" class="btn btn-primary" style="margin-top:1rem">+ Add Client</a></div></td></tr>';
     const pagEl = document.getElementById('clientPagination');
     if (total > 0) {
         pagEl.innerHTML = `

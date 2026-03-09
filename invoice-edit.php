@@ -94,9 +94,9 @@ require_once __DIR__ . '/includes/layout.php';
         </div>
         <div style="margin-top:1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap">
             <button type="submit" class="btn btn-primary">Save Invoice</button>
-            <a href="invoices.php" class="btn btn-secondary">Cancel</a>
+            <a href="invoices" class="btn btn-secondary">Cancel</a>
             <?php if ($id): ?>
-            <a href="invoice-view.php?id=<?= $id ?>" class="btn btn-secondary">View</a>
+            <a href="invoice-view?id=<?= $id ?>" class="btn btn-secondary">View</a>
             <?php endif; ?>
         </div>
     </form>
@@ -254,7 +254,7 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
         });
         const inv = await res.json();
         if (!res.ok) throw new Error(inv.error || 'Failed');
-        window.location.href = 'invoice-view.php?id=' + (inv.id || id);
+        window.location.href = 'invoice-view?id=' + (inv.id || id);
     } catch (err) {
         if (typeof showToast === 'function') showToast(err.message || 'Failed to save', 'error');
         else alert(err.message || 'Failed to save');

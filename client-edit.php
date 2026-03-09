@@ -39,7 +39,7 @@ require_once __DIR__ . '/includes/layout.php';
         </div>
         <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
             <button type="submit" class="btn btn-primary">Save Client</button>
-            <a href="clients.php" class="btn btn-secondary">Cancel</a>
+            <a href="clients" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
@@ -86,7 +86,7 @@ document.getElementById('clientForm').addEventListener('submit', async (e) => {
         }
         if (typeof showToast === 'function') showToast('Client saved', 'success');
         else alert('Client saved');
-        window.location.href = 'clients.php';
+        window.location.href = 'clients';
     } catch (err) {
         if (typeof showToast === 'function') showToast(err.message || 'Failed to save', 'error');
         else alert(err.message || 'Failed to save');

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 
 if (isLoggedIn()) {
-    header('Location: ' . APP_URL . '/dashboard.php');
+    header('Location: ' . APP_URL . '/dashboard');
     exit;
 }
 
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = 'Please enter email and password.';
     } elseif (login($email, $password)) {
-        header('Location: ' . APP_URL . '/dashboard.php');
+        header('Location: ' . APP_URL . '/dashboard');
         exit;
     } else {
         $error = 'Invalid email or password.';
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-            <a href="<?= APP_URL ?>/forgot-password.php" class="auth-link">Forgot password?</a>
+            <a href="<?= APP_URL ?>/forgot-password" class="auth-link">Forgot password?</a>
         </form>
     </div>
 </body>

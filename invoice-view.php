@@ -2,7 +2,7 @@
 $currentPage = 'invoices';
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) {
-    header('Location: invoices.php');
+    header('Location: invoices');
     exit;
 }
 $pageTitle = 'View Invoice';
@@ -10,11 +10,11 @@ $pageSubtitle = 'Invoice details and actions';
 require_once __DIR__ . '/includes/layout.php';
 ?>
 <div class="invoice-actions no-print">
-    <a href="invoice-edit.php?id=<?= $id ?>" class="btn btn-primary">Edit</a>
+    <a href="invoice-edit?id=<?= $id ?>" class="btn btn-primary">Edit</a>
     <button type="button" class="btn btn-secondary" onclick="window.print()">Print</button>
-    <a href="invoice-pdf.php?id=<?= $id ?>&print=1" class="btn btn-secondary" target="_blank">Download PDF</a>
+    <a href="invoice-pdf?id=<?= $id ?>&print=1" class="btn btn-secondary" target="_blank">Download PDF</a>
     <button type="button" class="btn btn-secondary" onclick="openEmailModal()">Email</button>
-    <a href="invoices.php" class="btn btn-secondary">Back to List</a>
+    <a href="invoices" class="btn btn-secondary">Back to List</a>
 </div>
 <div id="invoiceDisplay" class="invoice-print">
     <p class="text-muted">Loading invoice...</p>

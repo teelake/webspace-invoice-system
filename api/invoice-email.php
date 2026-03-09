@@ -27,7 +27,7 @@ $stmt->execute([$invoiceId]);
 $inv = $stmt->fetch();
 if (!$inv) jsonResponse(['error' => 'Invoice not found'], 404);
 
-$invoiceUrl = APP_URL . '/invoice-view.php?id=' . $invoiceId . '&print=1';
+$invoiceUrl = APP_URL . '/invoice-view?id=' . $invoiceId . '&print=1';
 $htmlBody = nl2br(htmlspecialchars($body)) . '<br><br><a href="' . $invoiceUrl . '">View Invoice</a>';
 
 if (sendMail($to, $subject, $htmlBody)) {

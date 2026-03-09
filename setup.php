@@ -7,7 +7,7 @@ require_once __DIR__ . '/config/app.php';
 
 $configFile = __DIR__ . '/config/database.php';
 if (file_exists($configFile)) {
-    header('Location: ' . APP_URL . '/index.php');
+    header('Location: ' . APP_URL . '/');
     exit;
 }
 
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <?php if ($success): ?>
         <div class="alert alert-success">
-            Database configured successfully! <a href="index.php">Go to Login</a>
+            Database configured successfully! <a href="<?= APP_URL ?>/">Go to Login</a>
         </div>
         <p class="text-muted" style="font-size:0.85rem; margin-top:1rem;">
             Run <code>database/schema.sql</code> in phpMyAdmin if you haven't created the tables yet.

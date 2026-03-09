@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 
 if (isLoggedIn()) {
-    header('Location: ' . APP_URL . '/dashboard.php');
+    header('Location: ' . APP_URL . '/dashboard');
     exit;
 }
 
@@ -46,10 +46,10 @@ if (empty($token)) {
             <p>Enter your new password</p>
         </div>
         <?php if ($success): ?>
-        <div class="alert alert-success">Password reset successfully. <a href="<?= APP_URL ?>/index.php">Login now</a></div>
+        <div class="alert alert-success">Password reset successfully. <a href="<?= APP_URL ?>/">Login now</a></div>
         <?php elseif ($error && $_SERVER['REQUEST_METHOD'] !== 'POST'): ?>
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-        <a href="<?= APP_URL ?>/forgot-password.php" class="auth-link">Request new link</a>
+        <a href="<?= APP_URL ?>/forgot-password" class="auth-link">Request new link</a>
         <?php else: ?>
         <?php if ($error): ?>
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
