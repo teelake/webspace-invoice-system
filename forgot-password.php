@@ -13,17 +13,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email)) {
         $error = 'Please enter your email.';
     } else {
-        $token = generateResetToken($email);
-        if ($token) {
-            $resetLink = APP_URL . '/reset-password?token=' . $token;
-            $body = "Click the link below to reset your password:<br><br><a href=\"$resetLink\">Reset Password</a><br><br>Link expires in 1 hour.";
-            if (sendMail($email, 'Reset your password - ' . APP_NAME, $body)) {
-                $message = 'If that email exists, we\'ve sent a reset link. Check your inbox.';
+        try {
+            $token = generateResetToken($email);
+            if ($token) {
+                $resetLink = APP_URL . '/reset-password?token=' . $token;
+                $body = "Click the link below to reset your password:<br><br><a href=\"$resetLink\">Reset Password</a><br><br>Link expires in 1 hour.";
+                if (sendMail($email, 'Reset your password - ' . APP_NAME, $body)) {
+                    $message = 'If that email exists, we\'ve sent a reset link. Check your inbox.';
+                } else {
+                    $message = 'Reset link: ' . $resetLink . ' (Email sending failed - copy this link)';
+                }
             } else {
-                $message = 'Reset link: ' . $resetLink . ' (Email sending failed - copy this link)';
+                $message = 'If that email exists, we\'ve sent a reset link. Check your inbox.';
             }
-        } else {
-            $message = 'If that email exists, we\'ve sent a reset link. Check your inbox.';
+        } catch (PDOException $e) {
+            $error = 'Database error. Please ensure the database is set up correctly.';
+        } catch (Exception $e) {
+            $error = 'Something went wrong. Please try again later.';
         }
     }
 }

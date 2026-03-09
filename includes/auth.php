@@ -62,6 +62,15 @@ function logout() {
 
 function generateResetToken($email) {
     $pdo = getDB();
+    // Ensure password_reset_tokens table exists (for fresh installs or older DBs)
+    $pdo->exec("CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        token VARCHAR(255) NOT NULL,
+        expires_at DATETIME NOT NULL,
+        used TINYINT(1) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
     $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute([$email]);
     if (!$stmt->fetch()) return null;
