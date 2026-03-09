@@ -1023,9 +1023,9 @@ input[type="checkbox"] {
 }
 
 .settings-form .logo-preview-img {
-    height: 120px;
+    height: 80px;
     width: auto;
-    max-width: 300px;
+    max-width: 200px;
     object-fit: contain;
 }
 
