@@ -74,7 +74,7 @@ async function loadInvoice() {
     <div class="invoice-paper" style="max-width:800px; margin:0 auto; font-family:${template.fontFamily || 'system-ui'}; padding:2rem; background:#fff; border-radius:8px; border:1px solid #e2e8f0;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
             <div>
-                ${company.logo_url ? `<img src="${company.logo_url}" alt="Logo" style="height:200px; width:auto; display:block; margin-bottom:0.35rem;">` : `<h2 style="margin:0; font-size:1.5rem; color:${accent}">${company.company_name || 'Company'}</h2>`}
+                ${company.logo_url ? `<img src="${company.logo_url}" alt="Logo" style="height:120px; width:auto; display:block; margin-bottom:0.35rem;">` : `<h2 style="margin:0; font-size:1.5rem; color:${accent}">${company.company_name || 'Company'}</h2>`}
                 ${company.address ? `<p style="margin:0.15rem 0 0 0; color:#64748b; font-size:0.9rem;">${company.address}</p>` : ''}
                 ${company.phone ? `<p style="margin:0; color:#64748b; font-size:0.9rem;">${company.phone}</p>` : ''}
                 ${company.email ? `<p style="margin:0; color:#64748b; font-size:0.9rem;">${company.email}</p>` : ''}
