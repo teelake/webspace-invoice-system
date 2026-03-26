@@ -71,18 +71,20 @@ document.getElementById('clientForm').addEventListener('submit', async (e) => {
         notes: document.getElementById('clientNotes').value.trim()
     };
     try {
-        if (id) {
-            await fetch(base + '/clients.php', {
+        const res = id
+            ? await fetch(base + '/clients.php', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...data, id })
-            });
-        } else {
-            await fetch(base + '/clients.php', {
+            })
+            : await fetch(base + '/clients.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(body.error || 'Request failed (' + res.status + ')');
         }
         if (typeof showToast === 'function') showToast('Client saved', 'success');
         else alert('Client saved');

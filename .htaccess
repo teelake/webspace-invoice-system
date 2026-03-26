@@ -3,7 +3,9 @@
     RewriteEngine On
 
     # Redirect .php URLs to clean URLs (301 permanent)
+    # NEVER redirect /api/*.php — browsers may turn POST into GET on 301 and the body is lost (breaks save/create)
     RewriteCond %{THE_REQUEST} \s([^?\s]+)\.php(\?[^\s]*)?\s [NC]
+    RewriteCond %{REQUEST_URI} !/api/ [NC]
     RewriteRule .* %1 [R=301,L]
 
     # Internally rewrite clean URLs to .php (pass through query string)

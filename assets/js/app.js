@@ -1,5 +1,7 @@
 // Webspace Invoice System - Shared JS
-const API_BASE = (document.querySelector('meta[name="api-base"]')?.content || window.location.origin + '/webspace-invoice-system') + '/api';
+// meta api-base is already the full API root (e.g. https://host/invoice/api) — do not append /api again
+const API_BASE = (document.querySelector('meta[name="api-base"]')?.content || '').replace(/\/$/, '')
+    || (window.location.origin + '/webspace-invoice-system/api');
 
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container') || (() => {
@@ -51,7 +53,8 @@ async function api(method, path, data = null) {
         opts.headers['Content-Type'] = 'application/json';
         opts.body = JSON.stringify(data);
     }
-    const res = await fetch((path.startsWith('http') ? path : API_BASE + path), opts);
+    const url = path.startsWith('http') ? path : (path.startsWith('/') ? API_BASE + path : API_BASE + '/' + path.replace(/^\//, ''));
+    const res = await fetch(url, opts);
     const json = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(json.error || 'Request failed');
     return json;
