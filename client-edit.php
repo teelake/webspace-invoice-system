@@ -61,7 +61,9 @@ async function loadClient() {
 
 document.getElementById('clientForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const id = document.getElementById('clientId').value;
+    // "0" is truthy as a string — must use numeric check or POST is mistaken for PUT
+    const id = parseInt(document.getElementById('clientId').value, 10) || 0;
+    const isEdit = id > 0;
     const data = {
         name: document.getElementById('clientName').value.trim(),
         company_name: document.getElementById('clientCompany').value.trim(),
@@ -71,7 +73,7 @@ document.getElementById('clientForm').addEventListener('submit', async (e) => {
         notes: document.getElementById('clientNotes').value.trim()
     };
     try {
-        const res = id
+        const res = isEdit
             ? await fetch(base + '/clients.php', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
