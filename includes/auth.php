@@ -38,11 +38,19 @@ function getCurrentUser() {
     $pdo = getDB();
     $stmt = $pdo->prepare("SELECT id, email, name, is_system_admin FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
-    return $stmt->fetch();
+    $u = $stmt->fetch();
+    if ($u) {
+        $_SESSION['is_system_admin'] = (int)($u['is_system_admin'] ?? 0);
+    }
+    return $u;
 }
 
 /** Platform operator — not tied to a tenant; no invoice/client UI. */
 function isSystemAdmin() {
+    if (!isLoggedIn()) return false;
+    if (array_key_exists('is_system_admin', $_SESSION)) {
+        return (int)$_SESSION['is_system_admin'] === 1;
+    }
     $u = getCurrentUser();
     return $u && (int)($u['is_system_admin'] ?? 0) === 1;
 }
@@ -57,7 +65,11 @@ function requireTenantUser() {
 }
 
 function redirectAfterLogin() {
-    header('Location: ' . APP_URL . (isSystemAdmin() ? '/platform-dashboard' : '/dashboard'));
+    $admin = array_key_exists('is_system_admin', $_SESSION)
+        ? ((int)$_SESSION['is_system_admin'] === 1)
+        : isSystemAdmin();
+    $path = $admin ? '/platform-dashboard' : '/dashboard';
+    header('Location: ' . APP_URL . $path);
     exit;
 }
 
@@ -69,6 +81,7 @@ function login($email, $password) {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
+        $_SESSION['is_system_admin'] = (int)($user['is_system_admin'] ?? 0);
         return true;
     }
     return false;
