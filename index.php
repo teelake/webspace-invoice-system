@@ -6,9 +6,6 @@ if ($dbOk) {
     require_once __DIR__ . '/config/database.php';
     require_once __DIR__ . '/includes/functions.php';
     require_once __DIR__ . '/includes/landing-data.php';
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
     if (!empty($_SESSION['user_id'])) {
         require_once __DIR__ . '/includes/auth.php';
         redirectAfterLogin();
@@ -52,7 +49,7 @@ $secondaryUrl = $loginUrl;
                 <span class="landing-headline-green"><?= htmlspecialchars($S['hero_title_green']) ?></span>
                 <span class="landing-headline-dark"><?= htmlspecialchars($S['hero_title_dark']) ?></span>
             </h1>
-            <div class="landing-subtitle landing-prose"><?= $S['hero_subtitle_html'] ?></div>
+            <div class="landing-subtitle landing-prose"><?= sanitizeRichHtml($S['hero_subtitle_html'] ?? '') ?></div>
             <div class="landing-cta-row">
                 <a class="landing-btn landing-btn-primary" href="<?= htmlspecialchars($S['hero_primary_cta_url']) ?>"><?= htmlspecialchars($S['hero_primary_cta_label']) ?></a>
                 <a class="landing-btn landing-btn-outline" href="<?= htmlspecialchars($secondaryUrl) ?>"><?= htmlspecialchars($S['hero_secondary_cta_label']) ?></a>

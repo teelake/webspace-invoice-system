@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-primary btn-block">Send Reset Link</button>
         </form>
         <?php endif; ?>
-        <a href="<?= APP_URL ?>/" class="auth-link">Back to login</a>
+        <a href="<?= APP_URL ?>/login" class="auth-link">Back to login</a>
     </div>
 </body>
 </html>

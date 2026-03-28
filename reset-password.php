@@ -45,7 +45,7 @@ if (empty($token)) {
             <p>Enter your new password</p>
         </div>
         <?php if ($success): ?>
-        <div class="alert alert-success">Password reset successfully. <a href="<?= APP_URL ?>/">Login now</a></div>
+        <div class="alert alert-success">Password reset successfully. <a href="<?= APP_URL ?>/login">Log in</a></div>
         <?php elseif ($error && $_SERVER['REQUEST_METHOD'] !== 'POST'): ?>
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
         <a href="<?= APP_URL ?>/forgot-password" class="auth-link">Request new link</a>

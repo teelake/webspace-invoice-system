@@ -132,7 +132,11 @@ function getLandingAdminData() {
     $row = $pdo->query('SELECT * FROM landing_settings WHERE id = 1')->fetch(PDO::FETCH_ASSOC);
     if ($row) {
         unset($row['id'], $row['updated_at']);
-        $out['settings'] = array_merge(defaultLandingSettings(), $row);
+        foreach ($row as $k => $v) {
+            if (array_key_exists($k, $out['settings']) && $v !== null) {
+                $out['settings'][$k] = $v;
+            }
+        }
     }
 
     $plans = $pdo->query('SELECT * FROM landing_plans ORDER BY sort_order ASC, id ASC')->fetchAll(PDO::FETCH_ASSOC);
