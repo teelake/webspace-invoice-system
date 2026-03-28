@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <?php if ($success): ?>
         <div class="alert alert-success">
-            Database configured successfully! <a href="<?= APP_URL ?>/">Go to Login</a>
+            Database configured successfully! <a href="<?= APP_URL ?>/">Open site</a> · <a href="<?= APP_URL ?>/login">Log in</a>
         </div>
         <p class="text-muted" style="font-size:0.85rem; margin-top:1rem;">
             Run <code>database/schema.sql</code> in phpMyAdmin if you haven't created the tables yet.

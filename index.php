@@ -76,9 +76,9 @@ $secondaryUrl = $loginUrl;
     </div>
 </section>
 
-<?php if (trim(strip_tags($S['content_rich_html'] ?? '')) !== ''): ?>
+<?php if (trim(strip_tags(sanitizeRichHtml($S['content_rich_html'] ?? ''))) !== ''): ?>
 <section class="landing-section landing-rich-block">
-    <div class="landing-container landing-prose"><?= $S['content_rich_html'] ?></div>
+    <div class="landing-container landing-prose"><?= sanitizeRichHtml($S['content_rich_html'] ?? '') ?></div>
 </section>
 <?php endif; ?>
 
@@ -116,7 +116,7 @@ $secondaryUrl = $loginUrl;
                 <?php endif; ?>
                 <h3 class="landing-plan-name"><?= htmlspecialchars($plan['name']) ?></h3>
                 <p class="landing-plan-price"><?= htmlspecialchars($plan['price_line']) ?></p>
-                <div class="landing-plan-desc landing-prose"><?= $plan['description_html'] ?? '' ?></div>
+                <div class="landing-plan-desc landing-prose"><?= sanitizeRichHtml($plan['description_html'] ?? '') ?></div>
                 <ul class="landing-plan-features">
                     <?php foreach ($plan['features'] ?? [] as $f): ?>
                     <li><?= htmlspecialchars($f) ?></li>
@@ -141,7 +141,7 @@ $secondaryUrl = $loginUrl;
         <div class="landing-testimonial-grid">
             <?php foreach ($LD['testimonials'] as $t): ?>
             <blockquote class="landing-testimonial-card">
-                <div class="landing-quote landing-prose"><?= $t['quote_html'] ?></div>
+                <div class="landing-quote landing-prose"><?= sanitizeRichHtml($t['quote_html'] ?? '') ?></div>
                 <footer class="landing-testimonial-meta">
                     <?php if (!empty($t['author_image_url'])): ?>
                     <img src="<?= htmlspecialchars($t['author_image_url']) ?>" alt="" class="landing-testimonial-avatar" loading="lazy">
@@ -168,7 +168,7 @@ $secondaryUrl = $loginUrl;
             <?php foreach ($LD['faqs'] as $i => $faq): ?>
             <details class="landing-faq-item"<?= $i === 0 ? ' open' : '' ?>>
                 <summary><?= htmlspecialchars($faq['question']) ?></summary>
-                <div class="landing-faq-answer landing-prose"><?= $faq['answer_html'] ?></div>
+                <div class="landing-faq-answer landing-prose"><?= sanitizeRichHtml($faq['answer_html'] ?? '') ?></div>
             </details>
             <?php endforeach; ?>
         </div>

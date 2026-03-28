@@ -12,7 +12,7 @@ if ($isPlatformAdmin) {
         header('Location: ' . APP_URL . '/platform-dashboard');
         exit;
     }
-} elseif ($currentPage === 'platform') {
+} elseif (in_array($currentPage, ['platform', 'landing'], true)) {
     header('Location: ' . APP_URL . '/dashboard');
     exit;
 }
