@@ -2,8 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 
 if (isLoggedIn()) {
-    header('Location: ' . APP_URL . '/dashboard');
-    exit;
+    redirectAfterLogin();
 }
 
 $error = '';
@@ -13,8 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = 'Please enter email and password.';
     } elseif (login($email, $password)) {
-        header('Location: ' . APP_URL . '/dashboard');
-        exit;
+        redirectAfterLogin();
     } else {
         $error = 'Invalid email or password.';
     }

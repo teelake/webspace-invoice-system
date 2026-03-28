@@ -6,9 +6,11 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 
+requireTenantUser();
+
 $id = (int)($_GET['id'] ?? 0);
-if (!$id || !isLoggedIn()) {
-    header('Location: ' . APP_URL . '/');
+if (!$id) {
+    header('Location: ' . APP_URL . '/invoices');
     exit;
 }
 

@@ -36,14 +36,34 @@ function requireLogin() {
 function getCurrentUser() {
     if (!isLoggedIn()) return null;
     $pdo = getDB();
-    $stmt = $pdo->prepare("SELECT id, email, name FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT id, email, name, is_system_admin FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     return $stmt->fetch();
 }
 
+/** Platform operator — not tied to a tenant; no invoice/client UI. */
+function isSystemAdmin() {
+    $u = getCurrentUser();
+    return $u && (int)($u['is_system_admin'] ?? 0) === 1;
+}
+
+/** Redirect if the user is a platform operator (tenant pages only). */
+function requireTenantUser() {
+    requireLogin();
+    if (isSystemAdmin()) {
+        header('Location: ' . APP_URL . '/platform-dashboard');
+        exit;
+    }
+}
+
+function redirectAfterLogin() {
+    header('Location: ' . APP_URL . (isSystemAdmin() ? '/platform-dashboard' : '/dashboard'));
+    exit;
+}
+
 function login($email, $password) {
     $pdo = getDB();
-    $stmt = $pdo->prepare("SELECT id, email, password, name FROM users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id, email, password, name, is_system_admin FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
     if ($user && password_verify($password, $user['password'])) {

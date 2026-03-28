@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/init.php';
+require_once __DIR__ . '/init-tenant.php';
 $pdo = getDB();
 $company = getCompanySettings();
 $taxRate = (float)($company['tax_rate'] ?? 0);
