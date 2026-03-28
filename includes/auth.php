@@ -28,7 +28,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: ' . APP_URL . '/');
+        header('Location: ' . APP_URL . '/login');
         exit;
     }
 }

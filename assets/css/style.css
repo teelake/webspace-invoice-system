@@ -1166,3 +1166,84 @@ input[type="checkbox"] {
         padding: 0 1rem;
     }
 }
+
+/* Platform admin — landing CMS tabs */
+.admin-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-tabs-nav button {
+    padding: 0.65rem 1rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-family: inherit;
+}
+
+.admin-tabs-nav button:hover {
+    color: var(--text);
+}
+
+.admin-tabs-nav button.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.admin-tab-panel {
+    display: none;
+    padding-top: 0.5rem;
+}
+
+.admin-tab-panel.active {
+    display: block;
+}
+
+.landing-quill-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    margin-bottom: 1rem;
+}
+
+.landing-quill-wrap .ql-editor {
+    min-height: 100px;
+}
+
+.landing-quill-wrap .ql-toolbar {
+    border: none;
+    border-bottom: 1px solid var(--border);
+}
+
+.landing-quill-wrap .ql-container {
+    border: none;
+    font-family: inherit;
+}
+
+.landing-field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.landing-repeat-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+}
+
+.landing-repeat-card h4 {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}

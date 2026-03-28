@@ -5,7 +5,7 @@ requireLogin();
 $user = getCurrentUser();
 $currentPage = $currentPage ?? 'dashboard';
 $isPlatformAdmin = isSystemAdmin();
-$allowedForAdmin = ['platform', 'profile'];
+$allowedForAdmin = ['platform', 'profile', 'landing'];
 
 if ($isPlatformAdmin) {
     if (!in_array($currentPage, $allowedForAdmin, true)) {
@@ -29,6 +29,7 @@ $homeHref = $isPlatformAdmin ? 'platform-dashboard' : 'dashboard';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/style.css">
+    <?= $extraHead ?? '' ?>
 </head>
 <body class="app-body">
     <aside class="sidebar" id="sidebar">

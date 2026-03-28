@@ -37,6 +37,18 @@ function getNextInvoiceNumber() {
     return $formatted;
 }
 
+/**
+ * Strip unsafe tags from Quill/admin HTML (trusted editors only).
+ */
+function sanitizeRichHtml($html) {
+    if ($html === null || $html === '') {
+        return '';
+    }
+    $allowed = '<p><br><br/><strong><b><em><i><u><s><strike><ul><ol><li><a><span><h1><h2><h3><h4><blockquote><div>';
+    $clean = strip_tags($html, $allowed);
+    return preg_replace('/\son\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $clean);
+}
+
 function sendMail($to, $subject, $body) {
     $headers = "From: " . SITE_EMAIL . "\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
