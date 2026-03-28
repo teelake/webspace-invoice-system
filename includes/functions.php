@@ -54,3 +54,35 @@ function sendMail($to, $subject, $body) {
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
     return @mail($to, $subject, $body, $headers);
 }
+
+/**
+ * Detect bcrypt column on users: this project uses `password`; Laravel-style DBs use `password_hash`.
+ *
+ * @return 'password'|'password_hash'|'' if neither exists
+ */
+function usersPasswordColumn(PDO $pdo): string {
+    static $cache = null;
+    if ($cache !== null) {
+        return $cache;
+    }
+    try {
+        $stmt = $pdo->query('SHOW COLUMNS FROM `users`');
+        $fields = $stmt ? $stmt->fetchAll(PDO::FETCH_COLUMN) : [];
+    } catch (Throwable $e) {
+        $fields = [];
+    }
+    if (in_array('password', $fields, true)) {
+        $cache = 'password';
+    } elseif (in_array('password_hash', $fields, true)) {
+        $cache = 'password_hash';
+    } else {
+        $cache = '';
+    }
+    return $cache;
+}
+
+/** Safe `identifier` for SQL SELECT/UPDATE (only known column names). */
+function usersPasswordColumnSql(PDO $pdo): string {
+    $p = usersPasswordColumn($pdo);
+    return in_array($p, ['password', 'password_hash'], true) ? '`' . $p . '`' : '';
+}

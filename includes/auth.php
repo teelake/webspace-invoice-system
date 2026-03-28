@@ -22,6 +22,8 @@ if (!function_exists('getDB')) {
     }
 }
 
+require_once __DIR__ . '/functions.php';
+
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
@@ -75,10 +77,15 @@ function redirectAfterLogin() {
 
 function login($email, $password) {
     $pdo = getDB();
-    $stmt = $pdo->prepare("SELECT id, email, password, name, is_system_admin FROM users WHERE email = ?");
+    $passCol = usersPasswordColumnSql($pdo);
+    if ($passCol === '') {
+        error_log('Webspace Invoice: users table has no password or password_hash column');
+        return false;
+    }
+    $stmt = $pdo->prepare("SELECT id, email, {$passCol} AS password, name, is_system_admin FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
-    if ($user && password_verify($password, $user['password'])) {
+    if ($user && !empty($user['password']) && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['is_system_admin'] = (int)($user['is_system_admin'] ?? 0);
@@ -130,9 +137,13 @@ function resetPassword($token, $newPassword) {
     $pdo = getDB();
     $hash = password_hash($newPassword, PASSWORD_DEFAULT);
     
+    $passCol = usersPasswordColumnSql($pdo);
+    if ($passCol === '') {
+        return false;
+    }
     $pdo->beginTransaction();
     try {
-        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
+        $stmt = $pdo->prepare("UPDATE users SET {$passCol} = ? WHERE email = ?");
         $stmt->execute([$hash, $data['email']]);
         $stmt = $pdo->prepare("UPDATE password_reset_tokens SET used = 1 WHERE token = ?");
         $stmt->execute([$token]);

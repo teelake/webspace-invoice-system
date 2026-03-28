@@ -58,15 +58,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             jsonResponse(['error' => 'New password must be at least 6 characters'], 400);
         }
 
-        $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
+        $passCol = usersPasswordColumnSql($pdo);
+        if ($passCol === '') {
+            jsonResponse(['error' => 'Password storage is not configured'], 500);
+        }
+        $stmt = $pdo->prepare("SELECT {$passCol} AS password FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch();
-        if (!$user || !password_verify($currentPassword, $user['password'])) {
+        if (!$user || empty($user['password']) || !password_verify($currentPassword, $user['password'])) {
             jsonResponse(['error' => 'Current password is incorrect'], 400);
         }
 
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE users SET {$passCol} = ? WHERE id = ?");
         $stmt->execute([$hash, $userId]);
 
         jsonResponse(['success' => true, 'message' => 'Password updated']);
